@@ -22,8 +22,28 @@ import {
   Landmark,
   MapPinned,
   Route,
+  Volume2,
+  VolumeX,
+  Star,
 } from "lucide-react";
-import WorldMap from "@/components/world-map";
+import dynamic from "next/dynamic";
+const WorldMap = dynamic(() => import("@/components/world-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="map-loading-inline" role="status">
+      Preparando el mapa…
+    </div>
+  ),
+});
+import GlobeSelector from "@/components/globe-selector";
+import {
+  Passport,
+  ExplorerProfile,
+  LittleWorld,
+  ContinentShape,
+  ContinentMedal,
+} from "@/components/adventure";
+import { useGameSound } from "@/hooks/use-game-sound";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +63,7 @@ import {
   type Mode,
   type Skill,
   type Country,
-} from "@/lib/content";`nimport flags from "@/lib/flags.json";
+} from "@/lib/content";
 import {
   emptyStore,
   createGame,
@@ -57,79 +77,22 @@ import {
 } from "@/lib/game";
 import { load, save, localDay, STORAGE_KEY } from "@/lib/persistence";
 import { normalize, validate } from "@/lib/validation";
+import { createChoices } from "@/lib/choices";
 import { cloud, uploadProgress, downloadProgress } from "@/lib/sync";
 
-function ModeMark({ kind }: { kind: "flag" | "capital" | "map" | "expedition" }) {
-  if (kind === "flag") return <span className="mode-mark flag-mark"><Flag /><Sparkles className="mark-spark" /></span>;
-  if (kind === "capital") return <span className="mode-mark capital-mark"><Landmark /><Sparkles className="mark-spark" /></span>;
-  if (kind === "map") return <span className="mode-mark map-mark"><MapPinned /><span className="map-dot" /></span>;
-  return <span className="mode-mark expedition-mark"><Route /><Sparkles className="mark-spark" /></span>;
-}
-const modes = [
-  {
-    id: "flag",
-    name: "Banderas",
-    text: "Un símbolo, mil historias. ¿De qué país es?",
-    icon: "flag",
-    color: "mint",
-  },
-  {
-    id: "capital",
-    name: "Capitales",
-    text: "Conecta cada país con su capital.",
-    icon: "capital",
-    color: "blue",
-  },
-  {
-    id: "map",
-    name: "Mapa",
-    text: "Encuentra tu lugar en el mundo.",
-    icon: "map",
-    color: "peach",
-  },
-  {
-    id: "expedition",
-    name: "Expedición",
-    text: "Banderas, capitales y mapa. El reto completo.",
-    icon: "expedition",
-    color: "night",
-  },
-] as const;
 function flag(c: Country, hidden = false) {
   return (
     <img
       className="country-flag"
-      src={`data:image/svg+xml;utf8,${encodeURIComponent(flags[c.code as keyof typeof flags])}`}
+      src={`/flags/${c.code}.svg`}
       alt={
         hidden
           ? "Bandera del país que debes identificar"
           : `Bandera de ${c.name}`
       }
       draggable={false}
+      loading={hidden ? "eager" : "lazy"}
     />
-  );
-}
-function choices(id: string, skill: Skill, seed: number) {
-  const correct = byId[id],
-    key = skill === "capital" ? "capital" : "name";
-  let options = countries.filter((c) => c.id !== id && c[key] !== correct[key]);
-  options.sort(
-    (a, b) =>
-      (a.continent === correct.continent ? 0 : 1) -
-        (b.continent === correct.continent ? 0 : 1) ||
-      hash(a.id + seed) - hash(b.id + seed),
-  );
-  const seen = new Set([normalize(correct[key])]);
-  const picked = [correct];
-  for (const c of options) {
-    if (!seen.has(normalize(c[key]))) {
-      picked.push(c);
-      seen.add(normalize(c[key]));
-    }
-    if (picked.length === 4) break;
-  }
-  return picked.sort(
-    (a, b) => hash(a.id + (seed + 7)) - hash(b.id + (seed + 7)),
   );
 }
 function hash(s: string) {
@@ -139,6 +102,7 @@ function hash(s: string) {
   return h >>> 0;
 }
 export default function Home() {
+  const sound = useGameSound();
   const [screen, setScreen] = useState("home"),
     [store, setStore] = useState<Store>(emptyStore),
     ref = useRef(store),
@@ -223,7 +187,7 @@ export default function Home() {
     Promise.resolve(
       context.registerTool(
         {
-          name: "geora_open_study",
+          name: "giratlas_open_study",
           title: "Estudiar países",
           description:
             "Abre el catálogo de países y aplica una búsqueda; no inicia ni altera partidas.",
@@ -257,6 +221,11 @@ export default function Home() {
     setScreen(to);
     setHint("");
     window.scrollTo({ top: 0, behavior: "instant" });
+    window.requestAnimationFrame(() =>
+      document
+        .querySelector<HTMLElement>("main h1")
+        ?.focus({ preventScroll: true }),
+    );
   }
   function begin() {
     if (!config) return;
@@ -272,10 +241,7 @@ export default function Home() {
     setMapSelection(null);
     navigate("game");
   }
-  const submitLock = useRef(0);
   function confirm() {
-    if (Date.now() - submitLock.current < 400) return;
-    submitLock.current = Date.now();
     const state = ref.current,
       game = state.game;
     if (!game || game.feedback || game.status !== "playing") return;
@@ -313,6 +279,7 @@ export default function Home() {
               : byId[answer]?.capital) ?? answer)
           : answer;
     commit(submit(state, game.sequence, correct, text, localDay()));
+    sound.play(correct);
     setHint("");
   }
   function next() {
@@ -338,7 +305,7 @@ export default function Home() {
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "geora-progreso.json";
+    a.download = "giratlas-progreso.json";
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -388,46 +355,67 @@ export default function Home() {
   );
   return (
     <>
-      <header>
+      <header className="site-header">
         <a
           className="brand"
-          href="#"
+          href="#inicio"
           onClick={(e) => {
             e.preventDefault();
             navigate("home");
           }}
-          aria-label="Geora, inicio"
+          aria-label="Giratlas, inicio"
         >
-          <img src="/geora.svg" alt="" />
-          geora<span>EL MUNDO TE ESPERA</span>
+          <img src="/giratlas.svg" alt="" />
+          <span className="brand-name">
+            Giratlas<span className="brand-dot">.</span>
+          </span>
         </a>
         <nav aria-label="Navegación principal">
           <button
             className={screen === "home" || screen === "game" ? "active" : ""}
             onClick={() => navigate("home")}
           >
-            Jugar
+            <Compass size={17} />
+            <span>Jugar</span>
           </button>
           <button
             className={screen === "study" ? "active" : ""}
             onClick={() => navigate("study")}
           >
             <BookOpen size={17} />
-            Estudiar
+            <span>Atlas</span>
+          </button>
+          <button
+            className={screen === "passport" ? "active" : ""}
+            onClick={() => navigate("passport")}
+          >
+            <Globe2 size={17} />
+            <span>Pasaporte</span>
           </button>
           <button
             className={screen === "profile" ? "active" : ""}
             onClick={() => navigate("profile")}
           >
             <UserRound size={17} />
-            Mi perfil
+            <span>Mi perfil</span>
           </button>
         </nav>
-        <span className="guest">
-          {account ? "Cuenta conectada" : "Modo invitado"}
-        </span>
+        <div className="header-right">
+          <button
+            className="sound-toggle"
+            onClick={sound.toggle}
+            aria-label={sound.enabled ? "Desactivar sonido" : "Activar sonido"}
+            aria-pressed={sound.enabled}
+          >
+            {sound.enabled ? <Volume2 size={19} /> : <VolumeX size={19} />}
+          </button>
+          <span className="guest">
+            <i />
+            {account ? "Conectado" : "Modo invitado"}
+          </span>
+        </div>
       </header>
-      <main>
+      <main id="main-content" className={"screen-" + screen}>
         {notice && (
           <div className="notice" role="status">
             <span>{notice}</span>
@@ -438,102 +426,184 @@ export default function Home() {
         )}
         {screen === "home" && (
           <>
-            <div className="intro">
-              <div>
-                <p className="eyebrow">TU PRÓXIMA AVENTURA EMPIEZA AQUÍ</p>
-                <h1>
-                  El mundo es grande.
-                  <br />
-                  <span>Tu curiosidad, más.</span>
+            <section className="home-hero">
+              <div className="hero-copy">
+                <p className="eyebrow">
+                  <span className="tiny-compass">✦</span> LA CURIOSIDAD MARCA EL
+                  RUMBO
+                </p>
+                <h1 tabIndex={-1}>
+                  <span className="hero-title-desktop">
+                    Gira el mundo.
+                    <br />
+                    Elige tu reto.
+                  </span>
+                  <span className="hero-title-mobile">
+                    Gira. Elige. Explora.
+                  </span>
                 </h1>
+                <Star
+                  className="hero-star"
+                  size={35}
+                  fill="#ffd34e"
+                  strokeWidth={2.2}
+                  aria-hidden="true"
+                />
                 <p>
-                  Descubre el mundo, país a país. Elige un reto y empieza a
-                  explorar.
-                </p>
-              </div>
-              <div className="passport">
-                <Compass size={52} />
-                <small>PASAPORTE DE EXPLORADOR</small>
-                <strong>
-                  195 países.
+                  Un mundo por descubrir.
                   <br />
-                  Infinitas historias.
-                </strong>
-              </div>
-            </div>
-            {!loaded ? (
-              <p role="status">Recuperando tu pasaporte…</p>
-            ) : (
-              g?.status === "playing" && (
-                <div className="resume">
-                  <div>
-                    <strong>Tu aventura sigue aquí</strong>
-                    <span>
-                      {modeNames[g.mode]} · {g.continent} · {done} de {total}{" "}
-                      países · {g.lives} vidas
-                    </span>
-                  </div>
-                  <button className="primary" onClick={() => navigate("game")}>
-                    Continuar partida <ChevronRight size={18} />
-                  </button>
-                </div>
-              )
-            )}
-            <div className="section-title">
-              <h2>¿Cómo quieres explorar?</h2>
-              <span>Cuatro maneras de descubrir el mundo</span>
-            </div>
-            <div className="modes">
-              {modes.map((m, i) => (
-                <button
-                  disabled={!loaded}
-                  onClick={() => setConfig(m.id)}
-                  className={"mode " + m.color}
-                  key={m.name}
-                >
-                  <div className="mode-top">
-                    <ModeMark kind={m.icon} />
-                    <span>0{i + 1}</span>
-                  </div>
-                  <h2>{m.name}</h2>
-                  <p>{m.text}</p>
-                  <div className="mode-bottom">
-                    <span>
-                      {i === 3 ? "6 VIDAS · 3 ETAPAS" : "3 VIDAS · A TU RITMO"}
-                    </span>
-                    <ArrowUpRight />
-                  </div>
-                </button>
-              ))}
-            </div>
-            <div className="study-banner">
-              <div>
-                <BookOpen />
-                <h3>Primero descubrir. Después conquistar.</h3>
-                <p>
-                  Explora las banderas, capitales y ubicaciones antes de
-                  ponerlas a prueba.
+                  Gíralo y empieza tu aventura.
                 </p>
+                <div className="hero-facts">
+                  <span>
+                    <Globe2 size={15} /> 195 países
+                  </span>
+                  <span>
+                    <Heart size={15} /> A tu ritmo
+                  </span>
+                </div>
               </div>
-              <button onClick={() => navigate("study")}>
-                Explorar países <ArrowUpRight size={18} />
+              <GlobeSelector disabled={!loaded} onChoose={setConfig} />
+              <span className="hero-coordinate" aria-hidden="true">
+                00° 00′ N &nbsp; 00° 00′ E<br />
+                EL PUNTO DE PARTIDA ERES TÚ
+              </span>
+            </section>
+            {!loaded ? (
+              <p className="loading-progress" role="status">
+                Abriendo tu pasaporte…
+              </p>
+            ) : g?.status === "playing" ? (
+              <div className="resume">
+                <span className="resume-symbol">
+                  <Route size={26} />
+                </span>
+                <div>
+                  <strong>Tu aventura sigue aquí</strong>
+                  <span>
+                    {modeNames[g.mode]} · {g.continent} · {done} / {total}{" "}
+                    países · {g.lives} vidas
+                  </span>
+                </div>
+                <button className="primary" onClick={() => navigate("game")}>
+                  Continuar partida <ChevronRight size={18} />
+                </button>
+              </div>
+            ) : (
+              <div className="home-stats">
+                <div>
+                  <Globe2 />
+                  <strong>{Object.keys(store.knowledge).length}</strong>
+                  <span>países practicados</span>
+                </div>
+                <div>
+                  <Flame />
+                  <strong>{streak(store.days, localDay())}</strong>
+                  <span>días de racha</span>
+                </div>
+                <div>
+                  <Trophy />
+                  <strong>{store.history.filter((h) => h.won).length}</strong>
+                  <span>aventuras completadas</span>
+                </div>
+                <span className="home-stats-note">
+                  Cada pequeño paso
+                  <br />
+                  te lleva más lejos.
+                </span>
+              </div>
+            )}
+            <div className="discovery-grid">
+              <button
+                className="discovery-card atlas-discovery"
+                onClick={() => navigate("study")}
+              >
+                <div>
+                  <p className="eyebrow">PRIMERO, DÉJATE SORPRENDER</p>
+                  <h2>El mundo en tus manos.</h2>
+                  <p>
+                    Banderas, capitales y lugares.
+                    <br />
+                    Todo empieza por descubrir.
+                  </p>
+                  <span>
+                    Abre tu atlas <ArrowUpRight size={18} />
+                  </span>
+                </div>
+                <span className="atlas-stack" aria-hidden="true">
+                  <span>🇯🇵</span>
+                  <span>🇧🇷</span>
+                  <span>🇫🇷</span>
+                </span>
+              </button>
+              <button
+                className="discovery-card passport-discovery"
+                onClick={() => navigate("passport")}
+              >
+                <div>
+                  <p className="eyebrow">CADA PAÍS DEJA HUELLA</p>
+                  <h2>Tu viaje merece un sello.</h2>
+                  <p>
+                    Colecciona descubrimientos.
+                    <br />
+                    Construye tu propio mundo.
+                  </p>
+                  <span>
+                    Ver mi pasaporte <ArrowUpRight size={18} />
+                  </span>
+                </div>
+                <span className="mini-stamp" aria-hidden="true">
+                  <ContinentShape name="Europa" />
+                  <span>EUROPA</span>
+                </span>
               </button>
             </div>
           </>
         )}
+        {screen === "passport" && (
+          <Passport
+            store={store}
+            account={account}
+            onPlay={() => navigate("home")}
+          />
+        )}
         {screen === "game" && g && (
           <>
             <div className="game-top">
-              <button className="text-button" onClick={() => navigate("home")}>
+              <span
+                className="arcade-score"
+                aria-label={`${done} de ${total} países completados`}
+              >
+                <Flag size={19} />
+                {done} / {total}
+              </span>
+              <button
+                className="text-button game-exit"
+                onClick={() => navigate("home")}
+                aria-label="Guardar y salir"
+              >
                 <ArrowLeft size={17} />
-                Guardar y salir
+                <span>Guardar y salir</span>
               </button>
-              <span>
+              <span className="game-mode-label">
                 {modeNames[g.mode]} · {g.continent}
               </span>
-              <div className="lives" aria-label={`${g.lives} vidas restantes`}>
-                <Heart size={20} fill="currentColor" />
-                {g.lives} <small>vidas</small>
+              <div
+                className="lives"
+                aria-label={`${g.lives} vidas restantes`}
+                key={g.lives}
+              >
+                {Array.from(
+                  { length: g.mode === "expedition" ? 6 : 3 },
+                  (_, i) => (
+                    <Heart
+                      key={i}
+                      size={19}
+                      fill={i < g.lives ? "currentColor" : "none"}
+                      className={i < g.lives ? "full-heart" : "empty-heart"}
+                    />
+                  ),
+                )}
               </div>
             </div>
             <div className="progress-caption">
@@ -550,12 +620,37 @@ export default function Home() {
               <section
                 className={"result " + (g.status === "won" ? "victory" : "")}
               >
-                <div className="result-icon">
+                <div className="result-hero">
                   {g.status === "won" ? (
-                    <Trophy size={46} />
+                    <ContinentMedal name={g.continent} />
                   ) : (
-                    <Compass size={46} />
+                    <LittleWorld />
                   )}
+                  <div className="result-hero-text">
+                    <p className="eyebrow">
+                      {g.status === "won"
+                        ? "UN NUEVO DESTINO EN TU PASAPORTE"
+                        : "EL VIAJE TAMBIÉN ES APRENDER"}
+                    </p>
+                    <h2>
+                      {g.status === "won"
+                        ? `¡${g.continent === "Todo el mundo" ? "Mundo completado" : g.continent + " completada"}!`
+                        : "Cada intento te lleva más lejos."}
+                    </h2>
+                    <div className="result-large-count">
+                      {done}
+                      <small> / {total}</small>
+                      <span>países completados</span>
+                    </div>
+                    {g.status === "won" && (
+                      <button
+                        className="text-button"
+                        onClick={() => navigate("passport")}
+                      >
+                        Tu nuevo sello te espera <ArrowUpRight size={17} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="eyebrow">
                   {g.status === "won"
@@ -594,7 +689,7 @@ export default function Home() {
                 )}
                 <div className="actions">
                   <button className="primary" onClick={again}>
-                    Volver a intentarlo
+                    Volver a jugar
                   </button>
                   <button
                     className="secondary"
@@ -637,7 +732,14 @@ export default function Home() {
             ) : (
               country && (
                 <section
-                  className="game-card"
+                  className={
+                    "game-card " +
+                    (g.feedback
+                      ? g.feedback.correct
+                        ? "answer-success"
+                        : "answer-failure"
+                      : "")
+                  }
                   key={g.sequence + (g.feedback ? "feedback" : "question")}
                 >
                   {g.mode === "expedition" && (
@@ -706,28 +808,68 @@ export default function Home() {
                     <RadioGroup
                       aria-label="Opciones de respuesta"
                       className="answers"
-                      value={answer}
+                      value={
+                        g.feedback
+                          ? answer ||
+                            countries.find(
+                              (c) =>
+                                (skill === "flag" ? c.name : c.capital) ===
+                                g.feedback?.answer,
+                            )?.id ||
+                            ""
+                          : answer
+                      }
                       onValueChange={setAnswer}
                       disabled={!!g.feedback}
                     >
-                      {choices(
+                      {createChoices(
+                        countries,
                         country.id,
                         skill!,
                         hash(g.id) + g.sequence - (g.feedback ? 1 : 0),
+                        normalize,
                       ).map((c, i) => (
                         <label
                           key={c.id}
                           className={
                             "answer " +
-                            (answer === c.id ? "chosen " : "") +
-                            (g.feedback && country.id === c.id ? "right" : "")
+                            (answer === c.id ||
+                            (!answer &&
+                              g.feedback?.answer ===
+                                (skill === "flag" ? c.name : c.capital))
+                              ? "chosen "
+                              : "") +
+                            (g.feedback && country.id === c.id
+                              ? "right "
+                              : "") +
+                            (g.feedback &&
+                            (answer === c.id ||
+                              (!answer &&
+                                g.feedback.answer ===
+                                  (skill === "flag" ? c.name : c.capital))) &&
+                            !g.feedback.correct
+                              ? "wrong"
+                              : "")
                           }
                         >
                           <RadioGroupItem
                             value={c.id}
                             aria-label={skill === "flag" ? c.name : c.capital}
                           />
-                          <span className="option-letter">{"ABCD"[i]}</span>
+                          <span className="option-letter">
+                            {g.feedback && country.id === c.id ? (
+                              <Check size={16} />
+                            ) : g.feedback &&
+                              (answer === c.id ||
+                                (!answer &&
+                                  g.feedback.answer ===
+                                    (skill === "flag" ? c.name : c.capital))) &&
+                              !g.feedback.correct ? (
+                              <X size={16} />
+                            ) : (
+                              "ABCD"[i]
+                            )}
+                          </span>
                           <span>{skill === "flag" ? c.name : c.capital}</span>
                         </label>
                       ))}
@@ -774,6 +916,13 @@ export default function Home() {
                       }
                       role="status"
                     >
+                      <span className="feedback-icon">
+                        {g.feedback.correct ? (
+                          <Check size={23} />
+                        ) : (
+                          <X size={23} />
+                        )}
+                      </span>
                       <strong>
                         {g.feedback.correct
                           ? "¡Bien encontrado!"
@@ -886,11 +1035,11 @@ export default function Home() {
         {screen === "profile" && (
           <>
             <p className="eyebrow">TU PASAPORTE DE EXPLORADOR</p>
-            <h1>Cada país cuenta.</h1>
+            <h1 tabIndex={-1}>Cada país cuenta.</h1>
             <p className="subheading">
-              Este es tu aprendizaje histórico. Se conserva al empezar un nuevo
-              intento.
+              Un viaje que crece contigo, país a país.
             </p>
+            <ExplorerProfile store={store} account={account} />
             <div className="profile-stats">
               <article>
                 <Trophy />
@@ -1031,8 +1180,9 @@ export default function Home() {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       try {
-                        const { parseStore } =
-                          await import("@/lib/persistence");
+                        const { parseStore } = await import(
+                          "@/lib/persistence"
+                        );
                         const incoming = parseStore(await file.text());
                         if (
                           window.confirm(
@@ -1044,7 +1194,7 @@ export default function Home() {
                         }
                       } catch {
                         setNotice(
-                          "No se puede importar este archivo. Debe ser una copia válida de Geora.",
+                          "No se puede importar este archivo. Debe ser una copia válida de Giratlas.",
                         );
                       }
                       e.target.value = "";
@@ -1087,8 +1237,11 @@ export default function Home() {
             </section>
           </>
         )}
-        <footer>
-          <span>GEORA · HECHO PARA MENTES CURIOSAS</span>
+        <footer className="site-footer">
+          <span className="footer-brand">
+            <img src="/giratlas.svg" alt="" /> GIRATLAS{" "}
+            <small>HECHO PARA MENTES CURIOSAS</small>
+          </span>
           <button className="text-button" onClick={() => navigate("sources")}>
             Datos y criterios
           </button>
@@ -1163,11 +1316,11 @@ export default function Home() {
             <X size={19} />
           </DialogClose>
           <DialogTitle className="dialog-heading">
-            {config ? modeNames[config] : ""}: elige tu destino
+            Prepara tu aventura
           </DialogTitle>
           <DialogDescription>
-            Completa todos los países de la región para ganar. Sin límite de
-            tiempo.
+            {config ? modeNames[config] : ""} · Completa los países de tu región
+            a tu ritmo.
           </DialogDescription>
           <h3>¿Hasta dónde viajamos?</h3>
           <RadioGroup
@@ -1179,6 +1332,11 @@ export default function Home() {
             {continents.map((c) => (
               <label className={continent === c ? "selected" : ""} key={c}>
                 <RadioGroupItem value={c} />
+                {c !== "Todo el mundo" ? (
+                  <ContinentShape name={c} />
+                ) : (
+                  <Globe2 size={28} />
+                )}
                 <span>
                   {c}
                   <small>
@@ -1195,7 +1353,9 @@ export default function Home() {
           </RadioGroup>
           {config !== "map" && (
             <>
-              <h3>Elige tu dificultad</h3>
+              <h3 className="setup-step">
+                <span>2</span> Elige dificultad
+              </h3>
               <RadioGroup
                 className="difficulty-options"
                 value={difficulty}
@@ -1218,15 +1378,32 @@ export default function Home() {
             </>
           )}
           <div className="setup-summary">
-            <Heart size={17} />
-            {config === "expedition" ? 6 : 3} vidas<span>·</span>
-            {
-              countries.filter(
-                (c) =>
-                  continent === "Todo el mundo" || c.continent === continent,
-              ).length
-            }{" "}
-            países{config === "expedition" ? " · 3 etapas por país" : ""}
+            <div
+              className="setup-lives"
+              aria-label={`${config === "expedition" ? 6 : 3} vidas`}
+            >
+              <div>
+                {Array.from(
+                  { length: config === "expedition" ? 6 : 3 },
+                  (_, i) => (
+                    <Heart key={i} size={20} fill="currentColor" />
+                  ),
+                )}
+              </div>
+              <small>{config === "expedition" ? 6 : 3} vidas</small>
+            </div>
+            <span className="setup-country-count">
+              {
+                countries.filter(
+                  (c) =>
+                    continent === "Todo el mundo" || c.continent === continent,
+                ).length
+              }{" "}
+              <small>países</small>
+              {config === "expedition" && (
+                <small className="expedition-stages">3 etapas por país</small>
+              )}
+            </span>
           </div>
           {g?.status === "playing" && (
             <p className="warning">
@@ -1235,7 +1412,7 @@ export default function Home() {
             </p>
           )}
           <button className="primary wide" onClick={begin}>
-            Comenzar aventura <ArrowUpRight size={19} />
+            Empezar reto <ArrowUpRight size={21} />
           </button>
         </DialogContent>
       </Dialog>
@@ -1251,7 +1428,7 @@ export default function Home() {
           </DialogClose>
           <DialogTitle className="dialog-heading">{detail?.name}</DialogTitle>
           <DialogDescription>
-            {detail?.continent} · Atlas de Geora
+            {detail?.continent} · Atlas de Giratlas
           </DialogDescription>
           {detail && (
             <>
@@ -1292,4 +1469,3 @@ export default function Home() {
     </>
   );
 }
-

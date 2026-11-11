@@ -1,6 +1,15 @@
-# Geora
+# Giratlas
 
 Aplicación de aprendizaje de geografía en español: 195 países, cuatro modalidades, atlas y perfil. El invitado funciona sin servicios externos. Los datos y las banderas se incluyen localmente.
+
+## Nueva experiencia Giratlas
+
+- Selector de modos sobre una esfera azul y verde, con arrastre, inercia breve, ajuste al modo, flechas y teclado. WebGL con alternativa visual y controles accesibles.
+- Identidad SVG con una G tipográfica proporcionada y una pequeña silueta de explorador.
+- Paleta Océano y aventura, atlas y partidas sobre fondos planos.
+- Pasaporte con progreso real y sellos que se obtienen al completar retos. Perfil con logros y actividad.
+- Acierto, fallo, vidas y resultados con movimiento breve; respeta movimiento reducido. Sonido opcional, desactivado de inicio.
+- Compatibilidad con el guardado anterior: se mantiene la clave `geora.progress.v1` y la tabla Supabase `geora_progress`. Las copias se validan antes de recuperarlas.
 
 ## Abrir en tu ordenador
 
@@ -63,3 +72,8 @@ El mapa requiere WebGL. Las zonas numeradas y sus coordenadas facilitan usar tec
 ## Validación
 
 Pruebas automatizadas de vidas, derrota inmediata, victoria, reaparición de fallos, idempotencia, etapas de Expedición, serialización, reinicio, normalización y racha. El test de contenido comprueba 195 IDs únicos, banderas SVG y polígonos vinculados. La revisión visual cubre inicio, configuración, juego, mapa, atlas y perfil en escritorio/móvil.
+
+
+## Verificación de esta edición
+
+`npm test`, `npx tsc --noEmit` y `npm run build`. Las pruebas cubren también giros completos, selección por el camino corto, ocultación de marcadores y validación de copias en todas las fases de los cuatro modos. Las nuevas pantallas y el arrastre deben comprobarse en navegador antes de dar por cerrada la revisión visual.

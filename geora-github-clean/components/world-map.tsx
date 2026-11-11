@@ -29,118 +29,128 @@ export default function WorldMap({
   useEffect(() => {
     let disposed = false;
     let instance: LibreMap;
+    markers.current = {};
     setReady(false);
     setError("");
-    import("maplibre-gl").then((m) => {
-      if (disposed || !container.current) return;
-      try {
-        m.setWorkerUrl("/vendor/maplibre-gl-worker.mjs");
-        instance = new m.Map({
-          container: container.current,
-          locale: {
-            "NavigationControl.ZoomIn": "Acercar",
-            "NavigationControl.ZoomOut": "Alejar",
-            "AttributionControl.ToggleAttribution": "Mostrar fuentes",
-            "Map.Title": "Mapamundi",
-          },
-          style: {
-            version: 8,
-            sources: {
-              countries: { type: "geojson", data: "/data/world.json" },
+    import("maplibre-gl")
+      .then((m) => {
+        if (disposed || !container.current) return;
+        try {
+          m.setWorkerUrl("/vendor/maplibre-gl-worker.mjs");
+          instance = new m.Map({
+            container: container.current,
+            locale: {
+              "NavigationControl.ZoomIn": "Acercar",
+              "NavigationControl.ZoomOut": "Alejar",
+              "AttributionControl.ToggleAttribution": "Mostrar fuentes",
+              "Map.Title": "Mapamundi",
             },
-            layers: [
-              {
-                id: "water",
-                type: "background",
-                paint: { "background-color": "#e5f0f5" },
+            style: {
+              version: 8,
+              sources: {
+                countries: { type: "geojson", data: "/data/world.json" },
               },
-              {
-                id: "land",
-                type: "fill",
-                source: "countries",
-                paint: {
-                  "fill-color": "#c0d3d2",
-                  "fill-outline-color": "#ffffff",
+              layers: [
+                {
+                  id: "water",
+                  type: "background",
+                  paint: { "background-color": "#e5f0f5" },
                 },
-              },
-              {
-                id: "selected",
-                type: "fill",
-                source: "countries",
-                filter: ["==", ["get", "id"], ""],
-                paint: { "fill-color": "#ef9479", "fill-opacity": 0.85 },
-              },
-              {
-                id: "correct",
-                type: "line",
-                source: "countries",
-                filter: ["==", ["get", "id"], ""],
-                paint: { "line-color": "#008a6c", "line-width": 3 },
-              },
-            ],
-          },
-          center: [12, 15],
-          zoom: 0.8,
-          minZoom: 0,
-          maxZoom: 10,
-          attributionControl: false,
-          renderWorldCopies: false,
-        });
-        map.current = instance;
-        instance.addControl(
-          new m.NavigationControl({ showCompass: false }),
-          "top-right",
-        );
-        instance.addControl(
-          new m.AttributionControl({
-            compact: true,
-            customAttribution: "Natural Earth · dominio público",
-          }),
-        );
-        instance.on("load", () => {
-          if (disposed) return;
-          setReady(true);
-          countries
-            .filter((c) => c.small)
-            .forEach((c) => {
-              const button = document.createElement("button");
-              button.className = "island-marker";
-              markers.current[c.id] = button;
-              button.textContent = "";
-              button.setAttribute(
-                "aria-label",
-                `Seleccionar zona ${countries.indexOf(c) + 1}`,
-              );
-              button.addEventListener("click", (e) => {
-                e.stopPropagation();
-                if (!latest.current.disabled) latest.current.onSelect(c.id);
+                {
+                  id: "land",
+                  type: "fill",
+                  source: "countries",
+                  paint: {
+                    "fill-color": "#c0d3d2",
+                    "fill-outline-color": "#ffffff",
+                  },
+                },
+                {
+                  id: "selected",
+                  type: "fill",
+                  source: "countries",
+                  filter: ["==", ["get", "id"], ""],
+                  paint: { "fill-color": "#ef9479", "fill-opacity": 0.85 },
+                },
+                {
+                  id: "correct",
+                  type: "line",
+                  source: "countries",
+                  filter: ["==", ["get", "id"], ""],
+                  paint: { "line-color": "#008a6c", "line-width": 3 },
+                },
+              ],
+            },
+            center: [12, 15],
+            zoom: 0.8,
+            minZoom: 0,
+            maxZoom: 10,
+            attributionControl: false,
+            renderWorldCopies: false,
+          });
+          map.current = instance;
+          instance.addControl(
+            new m.NavigationControl({ showCompass: false }),
+            "top-right",
+          );
+          instance.addControl(
+            new m.AttributionControl({
+              compact: true,
+              customAttribution: "Natural Earth · dominio público",
+            }),
+          );
+          instance.on("load", () => {
+            if (disposed) return;
+            setReady(true);
+            countries
+              .filter((c) => c.small)
+              .forEach((c) => {
+                const button = document.createElement("button");
+                button.className = "island-marker";
+                markers.current[c.id] = button;
+                button.textContent = "";
+                button.setAttribute(
+                  "aria-label",
+                  `Seleccionar zona ${countries.indexOf(c) + 1}`,
+                );
+                button.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  if (!latest.current.disabled) latest.current.onSelect(c.id);
+                });
+                new m.Marker({ element: button })
+                  .setLngLat([c.lng, c.lat])
+                  .addTo(instance);
               });
-              new m.Marker({ element: button })
-                .setLngLat([c.lng, c.lat])
-                .addTo(instance);
-            });
-        });
-        instance.on("click", "land", (e) => {
-          const id = e.features?.[0]?.properties?.id;
-          if (byId[id] && !latest.current.disabled) latest.current.onSelect(id);
-        });
-        instance.on("mouseenter", "land", () => {
-          instance.getCanvas().style.cursor = "pointer";
-        });
-        instance.on("mouseleave", "land", () => {
-          instance.getCanvas().style.cursor = "";
-        });
-        instance.on("error", () =>
+          });
+          instance.on("click", "land", (e) => {
+            const id = e.features?.[0]?.properties?.id;
+            if (byId[id] && !latest.current.disabled)
+              latest.current.onSelect(id);
+          });
+          instance.on("mouseenter", "land", () => {
+            instance.getCanvas().style.cursor = "pointer";
+          });
+          instance.on("mouseleave", "land", () => {
+            instance.getCanvas().style.cursor = "";
+          });
+          instance.on("error", () => {
+            if (disposed) return;
+            setError(
+              "No se pudo cargar el mapa. Comprueba la conexión o utiliza las zonas de teclado.",
+            );
+          });
+        } catch {
           setError(
-            "No se pudo cargar el mapa. Comprueba la conexión o utiliza las zonas de teclado.",
-          ),
-        );
-      } catch {
-        setError(
-          "Tu navegador no puede mostrar el mapa interactivo. Prueba otro navegador con WebGL.",
-        );
-      }
-    });
+            "Tu navegador no puede mostrar el mapa interactivo. Prueba otro navegador con WebGL.",
+          );
+        }
+      })
+      .catch(() => {
+        if (!disposed)
+          setError(
+            "No se pudo abrir el mapa. Puedes reintentar o usar la navegación por zonas.",
+          );
+      });
     return () => {
       disposed = true;
       instance?.remove();
@@ -153,6 +163,7 @@ export default function WorldMap({
       el.classList.toggle("is-selected", id === selected);
       el.classList.toggle("is-correct", id === reveal);
       el.setAttribute("aria-pressed", String(id === selected));
+      el.disabled = disabled;
     }
     map.current.setFilter("selected", ["==", ["get", "id"], selected ?? ""]);
     map.current.setFilter("correct", ["==", ["get", "id"], reveal ?? ""]);
@@ -166,7 +177,7 @@ export default function WorldMap({
           : 650,
       });
     }
-  }, [selected, reveal, ready]);
+  }, [selected, reveal, ready, disabled]);
   return (
     <div className="map-wrap">
       <div
