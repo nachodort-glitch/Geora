@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.next/
+.wrangler/
+.sites-runtime/
+.env*
+!.env.example
+*.tsbuildinfo
+artifacts/
+geora-github-clean/public/flags/
+geora-github-clean/public/data/earth-texture.svg
+geora-github-clean/public/data/continent-*.svg

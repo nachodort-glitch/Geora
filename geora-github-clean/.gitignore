@@ -1,0 +1,13 @@
+node_modules
+node_modules/
+dist/
+.next/
+.wrangler/
+.sites-runtime/
+.env*
+!.env.example
+*.tsbuildinfo
+public/flags/
+public/data/earth-texture.svg
+public/data/continent-*.svg
+artifacts/
