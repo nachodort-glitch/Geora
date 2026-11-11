@@ -31,3 +31,16 @@ consultar una API de geografía ni incorporar claves de mapas.
 
 La validación de copias rechaza estados incoherentes (vidas, tareas duplicadas,
 colas vacías, habilidades desconocidas) antes de que alcancen la interfaz.
+
+## Corrección de configuración móvil y respuestas
+
+- Los diálogos se centran con una cuadrícula fija al área visible, respetan los
+  márgenes seguros y desplazan su contenido. Se elimina la combinación de
+  `translate` de Tailwind y `transform` de CSS que desplazaba dos veces la ventana.
+- Las opciones usan Fisher–Yates con una semilla estable por partida, pregunta y
+  país; conservan el orden al mostrar la solución y al recuperar una partida.
+- Cuatro pruebas adicionales verifican unicidad, distribución de posiciones,
+  estabilidad y distractores del mismo continente. Total: 23 pruebas.
+- En 7.800 preguntas de banderas, las posiciones A–D obtuvieron 23,5 %, 25,7 %,
+  25,7 % y 25,1 %, frente a 42 respuestas en D de 45 países europeos en la mezcla
+  anterior para la muestra reproducida.

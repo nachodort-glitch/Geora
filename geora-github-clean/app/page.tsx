@@ -75,6 +75,7 @@ import {
 } from "@/lib/game";
 import { load, save, localDay, STORAGE_KEY } from "@/lib/persistence";
 import { normalize, validate } from "@/lib/validation";
+import { createChoices } from "@/lib/choices";
 import { cloud, uploadProgress, downloadProgress } from "@/lib/sync";
 
 function flag(c: Country, hidden = false) {
@@ -90,29 +91,6 @@ function flag(c: Country, hidden = false) {
       draggable={false}
       loading={hidden ? "eager" : "lazy"}
     />
-  );
-}
-function choices(id: string, skill: Skill, seed: number) {
-  const correct = byId[id],
-    key = skill === "capital" ? "capital" : "name";
-  let options = countries.filter((c) => c.id !== id && c[key] !== correct[key]);
-  options.sort(
-    (a, b) =>
-      (a.continent === correct.continent ? 0 : 1) -
-        (b.continent === correct.continent ? 0 : 1) ||
-      hash(a.id + seed) - hash(b.id + seed),
-  );
-  const seen = new Set([normalize(correct[key])]);
-  const picked = [correct];
-  for (const c of options) {
-    if (!seen.has(normalize(c[key]))) {
-      picked.push(c);
-      seen.add(normalize(c[key]));
-    }
-    if (picked.length === 4) break;
-  }
-  return picked.sort(
-    (a, b) => hash(a.id + (seed + 7)) - hash(b.id + (seed + 7)),
   );
 }
 function hash(s: string) {
@@ -811,10 +789,12 @@ export default function Home() {
                       onValueChange={setAnswer}
                       disabled={!!g.feedback}
                     >
-                      {choices(
+                      {createChoices(
+                        countries,
                         country.id,
                         skill!,
                         hash(g.id) + g.sequence - (g.feedback ? 1 : 0),
+                        normalize,
                       ).map((c, i) => (
                         <label
                           key={c.id}

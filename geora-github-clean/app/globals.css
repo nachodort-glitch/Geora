@@ -2209,17 +2209,34 @@ input {
   z-index: 50;
   animation: overlay-in 0.15s both;
 }
-[data-slot="dialog-content"] {
+.dialog-viewport {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
   z-index: 51;
   display: grid;
+  place-items: center;
+  padding: max(18px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: none;
+}
+[data-slot="dialog-content"] {
+  position: relative;
+  pointer-events: auto;
+  display: grid;
   gap: 18px;
-  width: calc(100% - 36px);
+  width: 100%;
+  min-width: 0;
   max-width: 560px;
-  max-height: 90dvh;
+  max-height: min(
+    90dvh,
+    calc(
+      100dvh - max(18px, env(safe-area-inset-top)) -
+        max(18px, env(safe-area-inset-bottom))
+    )
+  );
   overflow: auto;
   padding: 32px;
   background: var(--background);
@@ -2544,11 +2561,11 @@ input {
 @keyframes dialog-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -48%);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translateY(0);
   }
 }
 @media (min-width: 1500px) {
