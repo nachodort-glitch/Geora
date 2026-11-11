@@ -18,7 +18,7 @@ const modes = [
   {
     id: "flag",
     name: "Banderas",
-    description: "Un símbolo. Un país. Mil historias.",
+    description: "Reconoce países por sus colores.",
     icon: Flag,
   },
   {
@@ -239,112 +239,118 @@ export default function GlobeSelector({
       className="globe-selector"
       aria-label="Elige un modo girando el mundo"
     >
-      <div className="globe-scene">
-        <div
-          className={"globe-surface " + (dragging ? "is-dragging" : "")}
-          role="group"
-          tabIndex={0}
-          aria-label={`Globo giratorio. Modo ${active.name}. Usa las flechas izquierda y derecha para cambiar.`}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-              e.preventDefault();
-              step(e.key === "ArrowRight" ? 1 : -1);
-            }
-          }}
-          onPointerDown={(e) => {
-            if (e.button !== 0 || (e.target as HTMLElement).closest("button"))
-              return;
-            cancelAnimationFrame(frame.current);
-            e.currentTarget.setPointerCapture(e.pointerId);
-            pointer.current = {
-              id: e.pointerId,
-              x: e.clientX,
-              angle: angle.current,
-              lastX: e.clientX,
-              lastTime: performance.now(),
-              speed: 0,
-            };
-            setDragging(true);
-          }}
-          onPointerMove={(e) => {
-            const p = pointer.current;
-            if (!p || p.id !== e.pointerId) return;
-            const now = performance.now();
-            const scale = 5 / e.currentTarget.clientWidth;
-            p.speed =
-              ((e.clientX - p.lastX) * scale) / Math.max(now - p.lastTime, 1);
-            p.lastX = e.clientX;
-            p.lastTime = now;
-            update(p.angle - (e.clientX - p.x) * scale);
-          }}
-          onPointerUp={(e) => {
-            const p = pointer.current;
-            if (!p || p.id !== e.pointerId) return;
-            pointer.current = null;
-            setDragging(false);
-            const velocity = performance.now() - p.lastTime < 80 ? p.speed : 0;
-            const projected =
-              angle.current -
-              (reduced ? 0 : Math.max(-0.008, Math.min(0.008, velocity)) * 120);
-            settle(Math.round(projected / (Math.PI / 2)) * (Math.PI / 2));
-          }}
-          onPointerCancel={() => {
-            pointer.current = null;
-            setDragging(false);
-            settle(Math.round(angle.current / (Math.PI / 2)) * (Math.PI / 2));
-          }}
-        >
+      <div className="globe-stage">
+        <div className="globe-scene">
           <div
-            className="globe-fallback"
-            aria-hidden="true"
-            style={{ backgroundPosition: `${rotation * -80}px center` }}
-          />
-          <canvas
-            ref={canvas}
-            className={graphicsReady ? "earth-canvas ready" : "earth-canvas"}
-            aria-hidden="true"
-          />
-          {modes.map((m, index) => {
-            const pos = markerPosition(rotation, index);
-            const Icon = m.icon;
-            const visible = pos.depth > 0.08;
-            return (
-              <button
-                key={m.id}
-                className={
-                  "globe-marker " + (index === selected ? "front" : "")
-                }
-                style={{
-                  left: `${50 + pos.x}%`,
-                  opacity: visible ? Math.min(1, pos.depth * 2) : 0,
-                  transform: `translate(-50%,-50%) scale(${0.55 + Math.max(0, pos.depth) * 0.45})`,
-                  zIndex: Math.round((pos.depth + 1) * 10),
-                  visibility: visible ? "visible" : "hidden",
-                }}
-                tabIndex={-1}
-                aria-hidden="true"
-                onClick={() => choose(index)}
-              >
-                <span className="marker-pin">
-                  <Icon size={27} strokeWidth={2.1} />
-                </span>
-                <span className="marker-label">{m.name}</span>
-              </button>
-            );
-          })}
+            className={"globe-surface " + (dragging ? "is-dragging" : "")}
+            role="group"
+            tabIndex={0}
+            aria-label={`Globo giratorio. Modo ${active.name}. Usa las flechas izquierda y derecha para cambiar.`}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+                e.preventDefault();
+                step(e.key === "ArrowRight" ? 1 : -1);
+              }
+            }}
+            onPointerDown={(e) => {
+              if (e.button !== 0 || (e.target as HTMLElement).closest("button"))
+                return;
+              cancelAnimationFrame(frame.current);
+              e.currentTarget.setPointerCapture(e.pointerId);
+              pointer.current = {
+                id: e.pointerId,
+                x: e.clientX,
+                angle: angle.current,
+                lastX: e.clientX,
+                lastTime: performance.now(),
+                speed: 0,
+              };
+              setDragging(true);
+            }}
+            onPointerMove={(e) => {
+              const p = pointer.current;
+              if (!p || p.id !== e.pointerId) return;
+              const now = performance.now();
+              const scale = 5 / e.currentTarget.clientWidth;
+              p.speed =
+                ((e.clientX - p.lastX) * scale) / Math.max(now - p.lastTime, 1);
+              p.lastX = e.clientX;
+              p.lastTime = now;
+              update(p.angle - (e.clientX - p.x) * scale);
+            }}
+            onPointerUp={(e) => {
+              const p = pointer.current;
+              if (!p || p.id !== e.pointerId) return;
+              pointer.current = null;
+              setDragging(false);
+              const velocity =
+                performance.now() - p.lastTime < 80 ? p.speed : 0;
+              const projected =
+                angle.current -
+                (reduced
+                  ? 0
+                  : Math.max(-0.008, Math.min(0.008, velocity)) * 120);
+              settle(Math.round(projected / (Math.PI / 2)) * (Math.PI / 2));
+            }}
+            onPointerCancel={() => {
+              pointer.current = null;
+              setDragging(false);
+              settle(Math.round(angle.current / (Math.PI / 2)) * (Math.PI / 2));
+            }}
+          >
+            <div
+              className="globe-fallback"
+              aria-hidden="true"
+              style={{ backgroundPosition: `${rotation * -80}px center` }}
+            />
+            <canvas
+              ref={canvas}
+              className={graphicsReady ? "earth-canvas ready" : "earth-canvas"}
+              aria-hidden="true"
+            />
+            {modes.map((m, index) => {
+              const pos = markerPosition(rotation, index);
+              const Icon = m.icon;
+              const visible = pos.depth > 0.08;
+              return (
+                <button
+                  key={m.id}
+                  className={
+                    "globe-marker " + (index === selected ? "front" : "")
+                  }
+                  style={{
+                    left: `${50 + pos.x}%`,
+                    opacity: visible ? Math.min(1, pos.depth * 2) : 0,
+                    transform: `translate(-50%,-50%) scale(${0.55 + Math.max(0, pos.depth) * 0.45})`,
+                    zIndex: Math.round((pos.depth + 1) * 10),
+                    visibility: visible ? "visible" : "hidden",
+                  }}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  onClick={() => choose(index)}
+                >
+                  <span className="marker-pin">
+                    <Icon size={27} strokeWidth={2.1} />
+                  </span>
+                  <span className="marker-label">{m.name}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="globe-shadow" aria-hidden="true" />
+          <div className="orbit-label orbit-label-left">
+            <span /> 195 países por descubrir
+          </div>
+          <div className="orbit-label orbit-label-right">
+            Una vuelta. Mil descubrimientos. <span />
+          </div>
         </div>
-        <div className="globe-shadow" aria-hidden="true" />
-        <div className="orbit-label orbit-label-left">
-          <span /> 195 países por descubrir
-        </div>
-        <div className="orbit-label orbit-label-right">
-          Una vuelta. Mil descubrimientos. <span />
-        </div>
+        <p className="drag-hint">
+          <MoveHorizontal size={23} />
+          <span className="desktop-copy">Arrastra para girar</span>
+          <span className="mobile-copy">Desliza para girar</span>
+        </p>
       </div>
-      <p className="drag-hint">
-        <MoveHorizontal size={18} /> Arrastra el mundo y encuentra tu próximo
-        reto
-      </p>
       <div className="mode-selector-controls">
         <button
           className="round-button"
@@ -378,6 +384,13 @@ export default function GlobeSelector({
           <ArrowRight size={21} />
         </button>
       </div>
+      <button
+        className="primary mobile-mode-play"
+        disabled={disabled}
+        onClick={() => onChoose(active.id)}
+      >
+        Jugar a {active.name} <ArrowUpRight size={21} />
+      </button>
       <div className="mode-dots" aria-label="Modos de juego">
         {modes.map((m, i) => (
           <button
@@ -387,6 +400,7 @@ export default function GlobeSelector({
             onClick={() => choose(i)}
           >
             <span />
+            <m.icon size={17} />
             {m.name}
           </button>
         ))}

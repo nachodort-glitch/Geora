@@ -44,3 +44,23 @@ colas vacías, habilidades desconocidas) antes de que alcancen la interfaz.
 - En 7.800 preguntas de banderas, las posiciones A–D obtuvieron 23,5 %, 25,7 %,
   25,7 % y 25,1 %, frente a 42 respuestas en D de 45 países europeos en la mezcla
   anterior para la muestra reproducida.
+
+## Diseño Arcade Adventure
+
+Se aplica la dirección visual de los bocetos aprobados de escritorio y móvil:
+
+- Tipografía de títulos Nunito Sans en peso 900 e inclinada, alojada localmente.
+- Botones naranjas con borde azul oscuro y relieve corto; estados seleccionados
+  azules, aciertos verdes y errores coral. Se conserva movimiento reducido.
+- Escenario azul para el globo giratorio, controles de modo y acción principal.
+  En móvil solo se muestra una navegación inferior, sin duplicar el menú arriba.
+- Configuración en el contenedor móvil ya corregido, con regiones en tres
+  columnas, etapas numeradas y resumen de vidas y países.
+- Atlas plano de tarjetas horizontales con bandera, país y capital.
+- Carnet de explorador, colección de cinco sellos con uno protagonista y medalla
+  SVG del continente al completar un reto. Todo utiliza progreso real.
+
+La apariencia se separa en `app/arcade.css`. Las reglas, guardados y la mezcla de
+opciones no cambian. Verificados TypeScript, las 23 pruebas y la compilación.
+La herramienta de vista previa en navegador sigue sin estar disponible en este
+entorno; queda pendiente la comparación visual final en dispositivos reales.

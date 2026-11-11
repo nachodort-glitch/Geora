@@ -1,0 +1,2727 @@
+@font-face {
+  font-family: Giratlas Arcade;
+  src: url("/fonts/arcade-display.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+/* The arcade skin shares the existing layout, state and accessible controls. */
+body.arcade {
+  --foreground: #102a41;
+  --card-foreground: #102a41;
+  --orange: #f57918;
+  --border: #b8c1c5;
+  --arcade-ink: #102a41;
+  --arcade-blue: #1261a0;
+  --arcade-shadow: 0 4px 0 #102a41;
+  background: #faf7f0;
+}
+.arcade h1,
+.arcade h2,
+.arcade .dialog-heading {
+  font-family: "Giratlas Arcade", Manrope, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+.arcade h1 {
+  color: var(--arcade-ink);
+}
+.arcade .primary {
+  min-height: 51px;
+  padding: 12px 24px;
+  color: #fff;
+  background: linear-gradient(#ff8d28 0%, #f57512 45%, #e86808 100%);
+  border: 2px solid var(--arcade-ink);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 0 var(--arcade-ink),
+    inset 0 2px 0 #ffffff80;
+  font:
+    italic 900 20px/1.2 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+  text-shadow: 0 1px 1px #873804;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    filter 0.12s;
+}
+.arcade .primary:hover:not(:disabled) {
+  background: linear-gradient(#ff9b3e, #f37b1b);
+  box-shadow:
+    0 6px 0 var(--arcade-ink),
+    inset 0 2px 0 #ffffff80;
+  transform: translateY(-2px);
+}
+.arcade .primary:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 var(--arcade-ink),
+    inset 0 2px 0 #ffffff50;
+  transform: translateY(3px);
+}
+.arcade .primary:disabled {
+  filter: saturate(0.55);
+}
+.arcade .secondary {
+  border: 2px solid var(--arcade-ink);
+  color: var(--arcade-ink);
+  border-radius: 14px;
+  font-weight: 800;
+  box-shadow: 0 3px 0 var(--arcade-ink);
+}
+.arcade .secondary:active {
+  box-shadow: none;
+}
+.arcade .site-header {
+  height: 86px;
+  border-bottom: 2px solid var(--arcade-ink);
+  padding: 0 4%;
+}
+.arcade .brand img {
+  width: 43px;
+  height: 53px;
+}
+.arcade .brand-name {
+  font:
+    italic 900 32px/1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+  letter-spacing: -1.5px;
+}
+.arcade .brand-dot {
+  display: none;
+}
+.arcade nav {
+  gap: 9px;
+}
+.arcade nav button {
+  padding: 9px 17px;
+  font-weight: 800;
+  color: var(--arcade-ink);
+  border: 1px solid transparent;
+  font-size: 12px;
+}
+.arcade nav .active {
+  background: linear-gradient(#ffbe72, #ff882e);
+  border-color: #d66a14;
+  color: var(--arcade-ink);
+  box-shadow:
+    inset 0 1px 0 #fff8e1,
+    0 2px 0 #f2d2a9;
+}
+.arcade .sound-toggle {
+  color: var(--arcade-ink);
+  border: 1.5px solid transparent;
+}
+.arcade .sound-toggle:hover {
+  background: #e8f1f7;
+  border-color: var(--arcade-ink);
+}
+.arcade .guest {
+  font-size: 10px;
+}
+.arcade main {
+  padding-top: 34px;
+}
+.arcade .screen-home {
+  padding-top: 26px;
+}
+.arcade .home-hero {
+  min-height: 0;
+  margin-bottom: 20px;
+}
+.arcade .hero-copy {
+  left: 22px;
+  top: 46px;
+  width: 37%;
+}
+.arcade .hero-copy h1 {
+  font-size: clamp(43px, 4.8vw, 66px);
+  line-height: 1.01;
+  margin-bottom: 20px;
+  letter-spacing: -2.2px;
+}
+.arcade .hero-copy h1 span {
+  color: var(--arcade-ink);
+  white-space: normal;
+}
+.arcade .hero-copy h1 span:after {
+  display: none;
+}
+.arcade .hero-copy .eyebrow,
+.arcade .hero-copy > p,
+.arcade .hero-facts,
+.arcade .hero-coordinate {
+  display: none;
+}
+.arcade .hero-title-mobile,
+.arcade .mobile-copy,
+.arcade .mobile-mode-play {
+  display: none;
+}
+.arcade .hero-title-desktop {
+  display: block;
+}
+.arcade .hero-star {
+  color: var(--arcade-ink);
+  margin-top: 14px;
+  transform: rotate(12deg);
+}
+.arcade .globe-stage {
+  margin-left: 42%;
+  height: 446px;
+  border-radius: 30px 30px 27px 72px;
+  background: radial-gradient(
+    ellipse at 38% 25%,
+    #218bcc,
+    #1261a0 66%,
+    #0b4478
+  );
+  border: 2px solid var(--arcade-ink);
+  box-shadow: 0 5px 0 #0b3657;
+  overflow: hidden;
+  position: relative;
+}
+.arcade .globe-scene {
+  height: 373px;
+  width: 100%;
+}
+.arcade .globe-surface {
+  width: min(360px, 85%);
+  left: 50%;
+  right: auto;
+  top: 18px;
+  transform: translateX(-50%);
+}
+.arcade .globe-shadow {
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: 2px;
+  width: 66%;
+  height: 16px;
+  transform: translateX(-50%);
+  background: #03203c59;
+}
+.arcade .orbit-label {
+  display: none;
+}
+.arcade .drag-hint {
+  color: #fffaf0;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 6px 0 0;
+}
+.arcade .drag-hint svg {
+  color: #fff;
+  width: 31px;
+}
+.arcade .marker-pin {
+  background: linear-gradient(140deg, #ff9a36, #ef7018);
+  border: 3px solid #fff8df;
+  box-shadow:
+    0 4px 0 #a24612,
+    0 6px 12px #0632544d;
+}
+.arcade .marker-label {
+  border: 1.5px solid var(--arcade-ink);
+  color: var(--arcade-ink);
+  background: #fff8e7;
+  box-shadow: 0 3px 0 var(--arcade-ink);
+  font-size: 15px;
+  font-weight: 900;
+  padding: 6px 14px;
+}
+.arcade .mode-selector-controls {
+  position: relative;
+  z-index: 25;
+  margin: 22px auto 0;
+  gap: 12px;
+  max-width: 960px;
+}
+.arcade .round-button {
+  background: #fffaf0;
+  color: var(--arcade-ink);
+  width: 43px;
+  height: 43px;
+  min-width: 43px;
+  min-height: 43px;
+  border: 2px solid var(--arcade-ink);
+  box-shadow: 0 3px 0 #102a4124;
+}
+.arcade .selected-mode {
+  min-height: 91px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 18px;
+  padding: 17px 22px;
+  gap: 18px;
+  background: #fffaf2;
+  box-shadow: 0 4px 0 #102a4122;
+}
+.arcade .selected-mode-icon {
+  color: #f27112;
+  border-right: 2px solid #c5cbca;
+  padding-right: 18px;
+}
+.arcade .selected-mode-icon svg {
+  stroke-width: 2.5;
+  width: 33px;
+  height: 33px;
+}
+.arcade .mode-description .eyebrow {
+  display: none;
+}
+.arcade .mode-description h2 {
+  font-size: 29px;
+  margin-bottom: 3px;
+}
+.arcade .mode-description p {
+  font-size: 12px;
+  color: var(--arcade-ink);
+  font-weight: 600;
+}
+.arcade .selected-mode .primary {
+  min-height: 45px;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 13px;
+}
+.arcade .mode-dots {
+  gap: 10px;
+  margin-top: 20px;
+}
+.arcade .mode-dots button {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  border: 1.5px solid var(--arcade-ink);
+  border-radius: 20px;
+  background: #fffaf2;
+  color: var(--arcade-ink);
+  box-shadow: 0 2px 0 #102a4122;
+}
+.arcade .mode-dots button > span {
+  display: none;
+}
+.arcade .mode-dots button > svg {
+  color: #e77318;
+}
+.arcade .mode-dots button[aria-pressed="true"] {
+  background: #ffe3bf;
+  box-shadow: 0 2px 0 var(--arcade-ink);
+}
+.arcade .home-stats {
+  margin: 25px 0 28px;
+  border: 2px solid var(--arcade-ink);
+  color: #fff;
+  padding: 15px 28px;
+  border-radius: 16px;
+  background: linear-gradient(100deg, #1978b7, #1261a0);
+  box-shadow: 0 4px 0 #102a4120;
+  gap: 25px;
+}
+.arcade .home-stats strong {
+  color: #fff;
+  font-weight: 900;
+  font-size: 24px;
+}
+.arcade .home-stats svg {
+  color: #b7e0f9;
+}
+.arcade .home-stats span {
+  color: #edf8ff;
+  font-weight: 600;
+}
+.arcade .home-stats .home-stats-note {
+  display: none;
+}
+.arcade .resume {
+  border: 2px solid var(--arcade-ink);
+  box-shadow: 0 4px 0 #102a4122;
+  background: #fffaf2;
+}
+.arcade .discovery-card {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 20px;
+  box-shadow: 0 4px 0 var(--arcade-ink);
+}
+.arcade .discovery-card h2 {
+  font-size: 26px;
+}
+.arcade .discovery-card .eyebrow {
+  font-size: 8px;
+}
+.arcade .discovery-card:hover {
+  box-shadow: 0 6px 0 var(--arcade-ink);
+}
+/* Configuration uses the corrected viewport centering, never another transform. */
+.arcade [data-slot="dialog-content"] {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 23px;
+  box-shadow:
+    0 6px 0 #102a4170,
+    0 20px 60px #102a4133;
+  background: #fffaf2;
+}
+.arcade .setup-dialog {
+  gap: 16px;
+  max-width: 670px !important;
+  padding: 32px !important;
+}
+.arcade .setup-dialog .dialog-heading {
+  font-size: 34px;
+  line-height: 1.1;
+  padding-right: 30px;
+  margin: 5px 0 0;
+}
+.arcade .setup-dialog [data-slot="dialog-description"] {
+  font-size: 11px;
+  margin: 0;
+}
+.arcade .dialog-x {
+  color: var(--arcade-ink);
+  border: 2px solid var(--arcade-ink);
+  border-radius: 11px;
+  background: #fffefa;
+  top: 15px;
+  right: 15px;
+}
+.arcade .setup-step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font:
+    900 13px/1.4 Manrope,
+    sans-serif;
+  text-transform: uppercase;
+  margin: 7px 0 0;
+}
+.arcade .setup-step > span {
+  background: var(--orange);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  font-size: 16px;
+}
+.arcade .region-options {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+.arcade .region-options label {
+  min-height: 98px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 14px;
+  background: #fffcf6;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 3px 0 #102a4130;
+  min-width: 0;
+}
+.arcade .region-options .continent-shape {
+  width: 62px;
+  height: 42px;
+  color: #23866a;
+}
+.arcade .region-options label > svg:not(.continent-shape) {
+  color: #23866a;
+  width: 35px;
+  height: 35px;
+}
+.arcade .region-options small {
+  font-size: 9px;
+  color: #6c7b7b;
+  font-weight: 600;
+  margin-top: 3px;
+}
+.arcade .region-options .selected {
+  background: linear-gradient(130deg, #1682c4, #1261a0);
+  color: #fff;
+  box-shadow:
+    inset 0 0 0 2px #fff7dd,
+    0 3px 0 var(--arcade-ink);
+  border-color: var(--arcade-ink);
+}
+.arcade .region-options .selected:after {
+  content: "✓";
+  position: absolute;
+  right: -5px;
+  top: -7px;
+  border: 2px solid #fff;
+  outline: 1.5px solid var(--primary);
+  color: var(--primary);
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  font-size: 15px;
+  pointer-events: none;
+}
+.arcade .region-options .selected .continent-shape,
+.arcade .region-options .selected > svg {
+  color: #fff8ed;
+}
+.arcade .region-options .selected small {
+  color: #d8effd;
+}
+.arcade .difficulty-options {
+  gap: 12px;
+}
+.arcade .difficulty-options label {
+  padding: 12px 16px 12px 39px;
+  font-size: 13px;
+  font-weight: 900;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 25px;
+  min-width: 0;
+}
+.arcade .difficulty-options label:before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 15px;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 50%;
+}
+.arcade .difficulty-options .selected {
+  background: #b9e3ff;
+  box-shadow: 0 2px 0 #102a4130;
+}
+.arcade .difficulty-options .selected:before {
+  background: #1261a0;
+  border-color: #1261a0;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+.arcade .difficulty-options small {
+  font-size: 9px;
+  color: #47677d;
+  margin-top: 3px;
+}
+.arcade .setup-summary {
+  justify-content: center;
+  border: 1.5px solid var(--arcade-ink);
+  border-radius: 12px;
+  background: #fffdf6;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--arcade-ink);
+  padding: 12px;
+}
+.arcade .setup-summary svg {
+  color: #dd5b40;
+  fill: #f98468;
+}
+.arcade .setup-dialog .primary {
+  margin: 0 0 3px;
+  font-size: 22px;
+  border-radius: 17px;
+}
+/* Quiet play field; arcade energy is in the type, controls and feedback. */
+.arcade .screen-game {
+  max-width: 1100px;
+  padding-top: 29px;
+}
+.arcade .game-top {
+  border-bottom: 2px solid #c7c8bc;
+  margin-bottom: 17px;
+  padding-bottom: 20px;
+}
+.arcade .game-top > span {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--arcade-ink);
+}
+.arcade .game-top .text-button {
+  color: var(--arcade-ink);
+  font-size: 11px;
+}
+.arcade .lives {
+  border: 1.5px solid var(--arcade-ink);
+  border-radius: 30px;
+  background: #fffaf0;
+  padding: 8px 14px;
+  gap: 6px;
+  color: #e55b43;
+  box-shadow: 0 2px 0 #102a411c;
+}
+.arcade .lives svg {
+  stroke: #6c2522;
+  stroke-width: 1.6;
+  width: 21px;
+  height: 21px;
+}
+.arcade .lives .empty-heart {
+  color: #dfdfd3;
+  stroke: #9a9f94;
+}
+.arcade .progress-caption {
+  font-size: 11px;
+  color: var(--arcade-ink);
+}
+.arcade .progress-caption strong {
+  color: var(--arcade-ink);
+  font-weight: 800;
+}
+.arcade [data-slot="progress"] {
+  height: 9px;
+  border: 1px solid var(--arcade-ink);
+  background: #e8e9df;
+}
+.arcade [data-slot="progress-indicator"] {
+  background: linear-gradient(90deg, #2391cc, #1261a0);
+}
+.arcade .game-card {
+  max-width: 810px;
+  margin-top: 31px;
+  padding: 0 22px 30px;
+}
+.arcade .game-card > .eyebrow {
+  display: none;
+}
+.arcade .question-title {
+  font-size: clamp(29px, 3.1vw, 41px);
+  line-height: 1.12;
+  letter-spacing: -1.3px;
+  margin: 0 auto 24px;
+}
+.arcade .flag-stage {
+  height: 171px;
+  margin: 27px auto 32px;
+}
+.arcade .flag-stage .country-flag {
+  width: 245px;
+  max-height: 163px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 13px;
+  object-fit: contain;
+  background: #fff;
+}
+.arcade .compact-flag {
+  height: 80px;
+  margin: 16px 0 24px;
+}
+.arcade .compact-flag .country-flag {
+  width: 110px;
+  max-height: 75px;
+  border-radius: 7px;
+}
+.arcade .answers {
+  max-width: 700px;
+  gap: 13px;
+  margin-bottom: 27px;
+}
+.arcade .answer {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 13px;
+  min-height: 62px;
+  padding: 12px 14px;
+  font-size: 16px;
+  font-weight: 800;
+  gap: 12px;
+  background: #fffaf2;
+  box-shadow: 0 3px 0 var(--arcade-ink);
+}
+.arcade .answer:hover {
+  background: #e9f5ff;
+  border-color: var(--arcade-ink);
+}
+.arcade .option-letter {
+  background: #fffefa;
+  color: var(--arcade-ink);
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 900;
+}
+.arcade .answer.chosen {
+  padding: 12px 14px;
+  background: linear-gradient(110deg, #c5ecff, #9bd7ff);
+  border-color: #1261a0;
+  outline: 1px solid var(--arcade-ink);
+  box-shadow:
+    inset 0 0 0 2px #eefaff,
+    0 3px 0 var(--arcade-ink);
+  color: var(--arcade-ink);
+}
+.arcade .answer.chosen .option-letter {
+  border-color: var(--arcade-ink);
+  background: #fff;
+  color: var(--arcade-ink);
+}
+.arcade .answer.right {
+  background: #c6f0ad;
+  color: #145536;
+  border-color: #1c6c44;
+  box-shadow: 0 3px 0 #1c6c44;
+  outline: none;
+}
+.arcade .answer.right .option-letter {
+  background: #2d973f;
+  color: #fff;
+  border-color: #174c2f;
+}
+.arcade .answer.wrong {
+  background: #ffd6c5;
+  color: #a33123;
+  border-color: #a33123;
+  box-shadow: 0 3px 0 #a33123;
+  outline: none;
+}
+.arcade .answer.wrong .option-letter {
+  background: #cf4b35;
+  color: #fff;
+  border-color: #a33123;
+}
+.arcade .confirm-row {
+  max-width: 700px;
+  margin-top: 27px;
+}
+.arcade .confirm-row .primary {
+  min-width: 225px;
+  border-radius: 18px;
+}
+.arcade .confirm-row > span {
+  font-size: 10px;
+}
+.arcade .written-answer input {
+  border: 2px solid var(--arcade-ink);
+  box-shadow: 0 3px 0 var(--arcade-ink);
+  background: #fffdf5;
+  font-size: 16px;
+}
+.arcade .feedback {
+  max-width: 700px;
+  background: #d7f7bf;
+  border: 2px solid #275d31;
+  box-shadow: 0 4px 0 #275d31;
+}
+.arcade .feedback.incorrect {
+  background: #ffe0d0;
+  border-color: #a34331;
+  box-shadow: 0 4px 0 #a34331;
+}
+.arcade .feedback > strong {
+  font:
+    italic 900 22px/1.3 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+}
+.arcade .feedback > p {
+  font-weight: 700;
+  font-size: 12px;
+}
+.arcade .feedback .primary {
+  font-size: 17px;
+  min-height: 43px;
+}
+.arcade .stages span {
+  padding: 7px 12px;
+  border: 1.5px solid #bcc5be;
+  border-radius: 20px;
+  background: #fffaf0;
+  font-size: 11px;
+  font-weight: 800;
+}
+.arcade .stages .passed {
+  border-color: #23866a;
+  background: #d8f2c4;
+}
+.arcade .stages .current {
+  border-color: var(--arcade-ink);
+  color: #fff;
+  background: #1261a0;
+}
+/* A medal is earned by winning. The archive still uses actual game data. */
+.arcade .result {
+  max-width: 910px;
+}
+.arcade .result-hero {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 23px;
+  padding: 35px 42px;
+  min-height: 335px;
+  background: #fffaf2;
+  gap: 38px;
+  box-shadow: 0 5px 0 var(--arcade-ink);
+}
+.arcade .result.victory .result-hero:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: radial-gradient(ellipse at 42% 35%, #1886bd, #1261a0 80%);
+  border-right: 2px solid var(--arcade-ink);
+}
+.arcade .continent-medal {
+  width: 245px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  animation: medal-arrive 0.6s cubic-bezier(0.22, 0.8, 0.25, 1) both;
+}
+.arcade .continent-medal > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.arcade .medal-spark {
+  position: absolute;
+  color: #ffcc3e;
+  text-shadow:
+    -1px -1px 0 #102a41,
+    1px 1px 0 #102a41;
+  font-size: 35px;
+}
+.arcade .spark-one {
+  left: -17px;
+  top: 91px;
+  transform: rotate(-15deg);
+}
+.arcade .spark-two {
+  right: -7px;
+  top: 31px;
+  font-size: 23px;
+  transform: rotate(18deg);
+}
+.arcade .result-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+.arcade .result-hero-text .eyebrow {
+  font-size: 8px;
+  color: #668174;
+}
+.arcade .result-hero-text h2 {
+  font-size: 44px;
+  line-height: 1.04;
+  letter-spacing: -1.8px;
+}
+.arcade .result-large-count {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 22px;
+  padding: 16px 22px;
+  text-align: center;
+  background: #fffef7;
+  color: var(--arcade-ink);
+  font:
+    italic 900 61px/1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+  letter-spacing: -2px;
+  box-shadow: 0 3px 0 #102a4122;
+}
+.arcade .result-large-count small {
+  font: inherit;
+  color: var(--arcade-ink);
+  font-size: 48px;
+}
+.arcade .result-large-count span {
+  font:
+    800 15px/1.4 Manrope,
+    sans-serif;
+  color: var(--arcade-ink);
+  margin-top: 7px;
+}
+.arcade .result .actions {
+  gap: 15px;
+  margin-top: 25px;
+}
+.arcade .result .actions .secondary {
+  background: #fffaf2;
+}
+.arcade .result .actions button {
+  min-height: 48px;
+  font-size: 17px;
+}
+.arcade .result-hero-text > .text-button {
+  margin-top: 13px;
+  font-size: 11px;
+}
+/* Passport: membership ticket, one featured stamp, four collection slots. */
+.arcade .page-heading h1 {
+  font-size: 46px;
+  line-height: 1.12;
+}
+.arcade .passport-heading .eyebrow {
+  display: none;
+}
+.arcade .passport-heading h1 {
+  margin: 0 0 27px;
+  font-size: 43px;
+}
+.arcade .passport-heading h1 span {
+  color: var(--arcade-ink);
+}
+.arcade .arcade-ticket {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px 30px;
+  background: linear-gradient(110deg, #177db8, #1261a0 75%);
+  border: 2px solid var(--arcade-ink);
+  border-radius: 19px;
+  color: #fff;
+  box-shadow: 0 4px 0 var(--arcade-ink);
+}
+.arcade .arcade-ticket:before,
+.arcade .arcade-ticket:after {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 50%;
+  top: calc(50% - 9px);
+  background: var(--background);
+}
+.arcade .arcade-ticket:before {
+  left: -11px;
+}
+.arcade .arcade-ticket:after {
+  right: -11px;
+}
+.arcade .ticket-avatar {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 50%;
+  background: #fff0d2;
+  color: var(--arcade-ink);
+  font:
+    italic 900 41px/1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+  box-shadow: 0 4px 0 #0c3455;
+  flex-shrink: 0;
+}
+.arcade .ticket-details {
+  min-width: 0;
+  flex: 1;
+}
+.arcade .ticket-details h2 {
+  color: #fff;
+  font-size: 29px;
+  line-height: 1.15;
+  margin: 0 0 9px;
+  overflow-wrap: anywhere;
+}
+.arcade .ticket-details h2 > span {
+  font:
+    600 16px/1.3 Manrope,
+    sans-serif;
+  letter-spacing: -0.4px;
+  white-space: nowrap;
+}
+.arcade .ticket-details p {
+  margin: 0;
+  font-size: 12px;
+  color: #e1f0fa;
+  line-height: 1.5;
+}
+.arcade .ticket-details p i {
+  font-style: normal;
+  margin: 0 8px;
+  color: #a8d2eb;
+}
+.arcade .ticket-details p strong {
+  font-weight: 900;
+  color: #fff;
+}
+.arcade .ticket-badges {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.arcade .ticket-badges > span {
+  display: grid;
+  place-items: center;
+  width: 41px;
+  height: 48px;
+  background: linear-gradient(#fff0a3, #e8a92b);
+  color: #8c641c;
+  border: 2px solid #ffeeb1;
+  border-radius: 50% 50% 6px 6px;
+  box-shadow: 0 3px 0 #715827;
+}
+.arcade .ticket-badges > span.locked {
+  filter: grayscale(1);
+  opacity: 0.65;
+}
+.arcade .passport-collection {
+  display: block;
+  padding: 28px 0 0;
+  margin: 16px 0 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.arcade .collection-title {
+  margin: 0 0 20px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.arcade .collection-title h2 {
+  font-size: 26px;
+  margin: 0;
+}
+.arcade .collection-title p {
+  color: #697d80;
+  font-size: 11px;
+  margin: 6px 0 0;
+}
+.arcade .collection-count {
+  text-align: right;
+  flex-shrink: 0;
+}
+.arcade .collection-count strong {
+  color: #1261a0;
+  font-size: 30px;
+  font-weight: 900;
+}
+.arcade .collection-count > span {
+  font-size: 9px;
+}
+.arcade .stamp-grid {
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(145px, auto));
+  gap: 19px;
+  padding: 3px;
+}
+.arcade .travel-stamp {
+  --stamp: #e56d16;
+  --stamp-bg: #fff1db;
+  transform: none;
+  min-height: 155px;
+  padding: 15px 12px 13px;
+  border: 6px dotted var(--background);
+  outline: 1.5px solid var(--stamp);
+  outline-offset: -1px;
+  border-radius: 7px;
+  background: var(--stamp-bg);
+  box-shadow: 0 4px 0 #102a4122;
+  color: var(--arcade-ink);
+  gap: 3px;
+}
+.arcade .travel-stamp:hover {
+  transform: translateY(-3px) rotate(-1deg);
+}
+.arcade .stamp-1 {
+  --stamp: #4a9dcc;
+  --stamp-bg: #d8edf9;
+}
+.arcade .stamp-2 {
+  --stamp: #62a67a;
+  --stamp-bg: #e1f0d9;
+}
+.arcade .stamp-3 {
+  --stamp: #cda94c;
+  --stamp-bg: #fff0c9;
+}
+.arcade .stamp-4 {
+  --stamp: #a3a6a2;
+  --stamp-bg: #e9e9e0;
+}
+.arcade .travel-stamp.stamped {
+  background: linear-gradient(140deg, #ff9b3f, #ef7319);
+  color: #fff;
+  outline-color: #c15815;
+}
+.arcade .travel-stamp.unexplored {
+  filter: none;
+  opacity: 1;
+}
+.arcade .stamp-caption {
+  font-size: 6px;
+  letter-spacing: 1px;
+  font-weight: 900;
+  opacity: 0.7;
+}
+.arcade .travel-stamp > strong {
+  font:
+    italic 900 21px/1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.arcade .travel-stamp .continent-shape {
+  width: 80px;
+  height: 64px;
+  margin: 5px auto;
+  color: #25755d;
+}
+.arcade .travel-stamp.stamped .continent-shape {
+  color: #fff4d4;
+}
+.arcade .travel-stamp > span.stamp-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font:
+    800 8px/1.4 Manrope,
+    sans-serif;
+  margin-top: 1px;
+  letter-spacing: 0.5px;
+}
+.arcade .travel-stamp > span.stamp-total {
+  font:
+    900 15px/1.3 Manrope,
+    sans-serif;
+  margin-top: 5px;
+}
+.arcade .stamp-featured {
+  grid-row: span 2;
+  min-height: 325px;
+  background: #fff0d6;
+  transform: rotate(-2deg);
+  padding: 23px 17px;
+}
+.arcade .stamp-featured > strong {
+  font-size: 35px;
+  order: 0;
+}
+.arcade .stamp-featured .continent-shape {
+  width: 147px;
+  height: 133px;
+  margin: 14px auto;
+}
+.arcade .stamp-featured > span.stamp-status {
+  font-size: 11px;
+}
+.arcade .stamp-featured > span.stamp-total {
+  font-size: 28px;
+}
+.arcade .stamp-lock {
+  position: absolute;
+  right: 9px;
+  top: 11px;
+  color: #7b827d;
+}
+.arcade .stamp-check {
+  background: #1261a0;
+  border: 2px solid var(--background);
+  outline: 1px solid var(--arcade-ink);
+  width: 27px;
+  height: 27px;
+  right: -8px;
+  top: -8px;
+}
+.arcade .passport-play {
+  display: flex;
+  margin: 27px auto 0;
+  font-size: 18px;
+}
+.arcade .passport-footnote {
+  color: #738679;
+}
+.arcade .passport-footnote p {
+  font-size: 10px;
+}
+.arcade .explorer-profile {
+  margin-top: 27px;
+}
+.arcade .achievement-shelf,
+.arcade .week-activity,
+.arcade .panel,
+.arcade .profile-stats article {
+  border: 2px solid var(--arcade-ink);
+  box-shadow: 0 3px 0 #102a4124;
+  background: #fffaf2;
+}
+.arcade .achievement-shelf h3,
+.arcade .week-activity h3 {
+  font-size: 13px;
+  font-weight: 900;
+}
+.arcade .profile-stats strong {
+  color: #1261a0;
+  font:
+    italic 900 35px/1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+}
+.arcade .profile-stats span {
+  color: var(--arcade-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+.arcade .panel h2 {
+  font-size: 25px;
+}
+.arcade .skill-progress [data-slot="progress"] {
+  height: 8px;
+}
+/* Atlas stays flat and readable, with the mockup's horizontal country cards. */
+.arcade .screen-study > h1 {
+  font-size: 46px;
+  margin-bottom: 12px;
+}
+.arcade .screen-study > .eyebrow {
+  display: none;
+}
+.arcade .screen-study > .subheading {
+  margin-bottom: 24px;
+}
+.arcade .search input {
+  background: #fffdf7;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 22px;
+  height: 45px;
+  box-shadow: 0 2px 0 #102a4122;
+  font-size: 12px;
+}
+.arcade .continent-filter label {
+  border: 1.5px solid var(--arcade-ink);
+  color: var(--arcade-ink);
+  font-size: 11px;
+  font-weight: 800;
+  background: #fffdf7;
+  padding: 7px 16px;
+  box-shadow: 0 2px 0 #102a4122;
+}
+.arcade .continent-filter .selected {
+  color: #fff;
+  background: linear-gradient(#2792cc, #1261a0);
+  border-color: var(--arcade-ink);
+}
+.arcade .catalog {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.arcade .catalog .country-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 110px;
+  display: grid;
+  grid-template-columns: 65px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 2px 15px;
+  align-content: center;
+  min-height: 110px;
+  padding: 18px 17px;
+  border: 2px solid var(--arcade-ink);
+  border-radius: 13px;
+  box-shadow: 0 3px 0 var(--arcade-ink);
+  background: #fffaf2;
+}
+.arcade .country-card .country-flag {
+  grid-column: 1;
+  grid-row: 1/4;
+  width: 65px;
+  height: 47px;
+  margin: 0;
+  border: 1px solid var(--arcade-ink);
+  border-radius: 4px;
+  align-self: center;
+  object-fit: cover;
+}
+.arcade .catalog .country-card h3 {
+  grid-column: 2;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.25;
+  margin: 0;
+  align-self: end;
+}
+.arcade .catalog .country-card p {
+  grid-column: 2;
+  font-size: 11px;
+  color: var(--arcade-ink);
+  margin: 1px 0 3px;
+  line-height: 1.4;
+}
+.arcade .catalog .country-card > span {
+  grid-column: 2;
+  color: #799090;
+  font-size: 8px;
+}
+.arcade .country-card:hover {
+  background: #eaf5fa;
+  border-color: var(--arcade-ink);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--arcade-ink);
+}
+.arcade .country-dialog > .country-flag {
+  border: 2px solid var(--arcade-ink);
+  border-radius: 7px;
+}
+.arcade .site-footer {
+  border-top: 2px solid var(--arcade-ink);
+}
+@keyframes medal-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-9deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-4deg) scale(1);
+  }
+}
+@media (min-width: 801px) {
+  .arcade nav button svg {
+    display: none;
+  }
+}
+@media (min-width: 1500px) {
+  .arcade .globe-stage {
+    height: 475px;
+  }
+  .arcade .globe-scene {
+    height: 400px;
+  }
+  .arcade .globe-surface {
+    width: 385px;
+    top: 18px;
+  }
+  .arcade .hero-copy {
+    top: 50px;
+  }
+  .arcade .hero-copy h1 {
+    font-size: 72px;
+  }
+}
+@media (max-width: 1000px) {
+  .arcade .hero-copy {
+    top: 43px;
+    left: 8px;
+    width: 38%;
+  }
+  .arcade .hero-copy h1 {
+    font-size: 53px;
+  }
+  .arcade .globe-stage {
+    margin-left: 42%;
+    height: 400px;
+  }
+  .arcade .globe-scene {
+    height: 329px;
+  }
+  .arcade .globe-surface {
+    width: min(320px, 87%);
+    top: 14px;
+  }
+  .arcade .mode-description h2 {
+    font-size: 25px;
+  }
+  .arcade .selected-mode {
+    padding: 16px 18px;
+    gap: 14px;
+  }
+  .arcade .selected-mode .primary {
+    font-size: 14px;
+    padding: 11px 15px;
+  }
+  .arcade .catalog .country-card {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 2px 11px;
+    padding: 17px 12px;
+  }
+  .arcade .country-card .country-flag {
+    width: 52px;
+    height: 38px;
+  }
+  .arcade .catalog .country-card h3 {
+    font-size: 13px;
+  }
+  .arcade .result-hero {
+    padding: 28px;
+    gap: 30px;
+  }
+  .arcade .continent-medal {
+    width: 210px;
+  }
+  .arcade .result-hero-text h2 {
+    font-size: 37px;
+  }
+  .arcade .ticket-details h2 {
+    font-size: 26px;
+  }
+  .arcade .ticket-details h2 > span {
+    font-size: 13px;
+  }
+  .arcade .ticket-badges {
+    gap: 8px;
+  }
+  .arcade .stamp-featured > strong {
+    font-size: 30px;
+  }
+  .arcade .stamp-featured .continent-shape {
+    width: 120px;
+    height: 110px;
+  }
+}
+@media (max-width: 800px) {
+  .arcade .site-header {
+    height: 78px;
+    padding: 0 22px;
+  }
+  .arcade .brand-name {
+    font-size: 27px;
+  }
+  .arcade .brand img {
+    width: 36px;
+    height: 46px;
+  }
+  .arcade nav {
+    gap: 1px;
+  }
+  .arcade nav button {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+  .arcade nav button svg {
+    display: none;
+  }
+  .arcade .hero-copy {
+    position: relative;
+    width: auto;
+    left: auto;
+    top: auto;
+    text-align: center;
+    margin: 3px 0 23px;
+  }
+  .arcade .hero-copy h1 {
+    font-size: 43px;
+    line-height: 1.04;
+  }
+  .arcade .hero-title-desktop {
+    display: none;
+  }
+  .arcade .hero-title-mobile {
+    display: block;
+  }
+  .arcade .hero-star {
+    display: none;
+  }
+  .arcade .globe-stage {
+    margin: 0 auto;
+    max-width: 580px;
+    height: 390px;
+    border-radius: 30px 30px 28px 28px;
+  }
+  .arcade .globe-scene {
+    height: 330px;
+  }
+  .arcade .globe-surface {
+    width: 310px;
+    top: 14px;
+  }
+  .arcade .globe-shadow {
+    bottom: 4px;
+    width: 235px;
+  }
+  .arcade .drag-hint {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .arcade .mode-selector-controls {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .arcade .selected-mode {
+    min-height: 85px;
+    gap: 12px;
+    padding: 15px 16px;
+  }
+  .arcade .mode-description p {
+    font-size: 10px;
+  }
+  .arcade .mode-description h2 {
+    font-size: 26px;
+  }
+  .arcade .selected-mode-icon {
+    padding-right: 12px;
+  }
+  .arcade .selected-mode-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  .arcade .selected-mode .primary {
+    font-size: 13px;
+    min-height: 42px;
+    padding: 10px 13px;
+  }
+  .arcade .home-stats {
+    padding: 16px 21px;
+  }
+  .arcade .home-stats span {
+    font-size: 10px;
+  }
+  .arcade .arcade-ticket {
+    padding: 23px 25px;
+    gap: 17px;
+  }
+  .arcade .ticket-avatar {
+    width: 58px;
+    height: 58px;
+    font-size: 37px;
+  }
+  .arcade .ticket-details h2 > span {
+    display: block;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .arcade .ticket-details p {
+    font-size: 10px;
+  }
+  .arcade .ticket-details p i {
+    margin: 0 5px;
+  }
+  .arcade .ticket-badges > span {
+    width: 32px;
+    height: 41px;
+  }
+  .arcade .ticket-badges svg {
+    width: 16px;
+    height: 16px;
+  }
+  .arcade .stamp-grid {
+    gap: 14px;
+    grid-template-rows: repeat(2, minmax(140px, auto));
+  }
+  .arcade .travel-stamp {
+    min-height: 140px;
+    padding: 13px 7px;
+  }
+  .arcade .travel-stamp > strong {
+    font-size: 18px;
+  }
+  .arcade .travel-stamp .continent-shape {
+    width: 68px;
+    height: 52px;
+  }
+  .arcade .stamp-featured {
+    min-height: 295px;
+    padding: 20px 10px;
+  }
+  .arcade .stamp-featured > strong {
+    font-size: 28px;
+  }
+  .arcade .stamp-featured .continent-shape {
+    width: 100px;
+    height: 100px;
+  }
+  .arcade .stamp-featured > span.stamp-total {
+    font-size: 24px;
+  }
+  .arcade .stamp-featured > span.stamp-status {
+    font-size: 9px;
+  }
+  .arcade .collection-title h2 {
+    font-size: 23px;
+  }
+  .arcade .collection-title p {
+    max-width: 220px;
+    font-size: 10px;
+  }
+  .arcade .collection-count strong {
+    font-size: 26px;
+  }
+  .arcade .catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+  }
+  .arcade .catalog .country-card {
+    grid-template-columns: 57px minmax(0, 1fr);
+    min-height: 104px;
+    padding: 16px 13px;
+  }
+  .arcade .country-card .country-flag {
+    width: 57px;
+    height: 41px;
+  }
+  .arcade .result-hero-text h2 {
+    font-size: 34px;
+  }
+  .arcade .result-hero {
+    padding: 24px;
+    gap: 26px;
+  }
+  .arcade .continent-medal {
+    width: 190px;
+  }
+  .arcade .result-large-count {
+    font-size: 48px;
+    padding: 15px;
+  }
+  .arcade .result-large-count small {
+    font-size: 38px;
+  }
+}
+@media (max-width: 580px) {
+  .arcade .site-header {
+    height: 73px;
+    padding: 0 17px;
+  }
+  .arcade .brand-name {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .arcade .brand img {
+    width: 37px;
+    height: 47px;
+  }
+  .arcade .guest {
+    display: none;
+  }
+  .arcade .sound-toggle {
+    min-width: 39px;
+    min-height: 39px;
+    border: 1.5px solid var(--arcade-ink);
+    border-radius: 12px;
+    margin-right: 0;
+  }
+  .arcade .site-header nav {
+    height: 72px;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+    background: #fffcf5f5;
+    border: 2px solid var(--arcade-ink);
+    border-bottom: 0;
+    border-radius: 20px 20px 0 0;
+    gap: 7px;
+    box-shadow: 0 -3px 14px #102a4110;
+  }
+  .arcade .site-header nav button {
+    min-height: 49px;
+    padding: 6px 7px;
+    font-size: 9px;
+    gap: 4px;
+    border: 0;
+    border-radius: 14px;
+    line-height: 1;
+    max-width: 83px;
+  }
+  .arcade .site-header nav button svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.2;
+  }
+  .arcade .site-header nav button.active {
+    background: linear-gradient(#ffb15b, #ff892e);
+    border: 1px solid #dc6810;
+    box-shadow:
+      inset 0 1px 0 #fff1d3,
+      0 2px 0 #d26b1b;
+  }
+  .arcade main {
+    padding: 26px 16px 105px;
+  }
+  .arcade .screen-home {
+    padding-top: 24px;
+  }
+  .arcade .home-hero {
+    margin-bottom: 0;
+  }
+  .arcade .hero-copy {
+    margin: 0 0 19px;
+    text-align: left;
+  }
+  .arcade .hero-copy h1 {
+    font-size: clamp(27px, 7.6vw, 35px);
+    line-height: 1.12;
+    letter-spacing: -1px;
+    margin: 0;
+    white-space: normal;
+  }
+  .arcade .hero-title-mobile {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 8px;
+  }
+  .arcade .hero-title-mobile:after {
+    content: "" !important;
+    display: block !important;
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+    width: 31%;
+    height: 7px;
+    border-top: 3px solid var(--orange);
+    border-radius: 50%;
+    transform: rotate(-3deg);
+  }
+  .arcade .globe-stage {
+    height: 344px;
+    max-width: 410px;
+    border-radius: 27px;
+    box-shadow: 0 4px 0 #0c3555;
+  }
+  .arcade .globe-scene {
+    height: 291px;
+  }
+  .arcade .globe-surface {
+    width: min(278px, 85%);
+    top: 14px;
+  }
+  .arcade .globe-shadow {
+    bottom: -4px;
+    height: 14px;
+    width: 210px;
+  }
+  .arcade .drag-hint {
+    font-size: 12px;
+    margin: 9px 0 0;
+  }
+  .arcade .drag-hint .desktop-copy {
+    display: none;
+  }
+  .arcade .drag-hint .mobile-copy {
+    display: block;
+  }
+  .arcade .drag-hint svg {
+    width: 28px;
+    height: 23px;
+  }
+  .arcade .marker-pin {
+    width: 53px;
+    height: 53px;
+    border-width: 2px;
+  }
+  .arcade .marker-label {
+    font-size: 13px;
+    padding: 5px 11px;
+  }
+  .arcade .marker-pin svg {
+    width: 25px;
+    height: 25px;
+  }
+  .arcade .mode-selector-controls {
+    gap: 9px;
+    margin: 19px auto 0;
+  }
+  .arcade .round-button {
+    min-width: 35px;
+    width: 35px;
+    height: 42px;
+    min-height: 42px;
+  }
+  .arcade .round-button svg {
+    width: 18px;
+    height: 18px;
+  }
+  .arcade .selected-mode {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 12px;
+    min-height: 82px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+  .arcade .selected-mode-icon {
+    padding-right: 11px;
+    border-right: 1.5px solid #b7c3c9;
+  }
+  .arcade .selected-mode-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+  .arcade .mode-description h2 {
+    font-size: 27px;
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+  .arcade .mode-description p {
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+  .arcade .selected-mode > .primary {
+    display: none;
+  }
+  .arcade .mobile-mode-play {
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 21px;
+    border-radius: 16px;
+    min-height: 50px;
+  }
+  .arcade .mode-dots {
+    gap: 12px;
+    margin: 14px 0 0;
+  }
+  .arcade .mode-dots button {
+    width: 14px;
+    min-height: 29px;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 0;
+    box-shadow: none;
+    gap: 0;
+  }
+  .arcade .mode-dots button > svg {
+    display: none;
+  }
+  .arcade .mode-dots button > span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #6c9db6;
+    background: #9fcadd;
+  }
+  .arcade .mode-dots button[aria-pressed="true"] {
+    background: none;
+    box-shadow: none;
+  }
+  .arcade .mode-dots button[aria-pressed="true"] > span {
+    background: var(--orange);
+    border-color: #da6817;
+    width: 12px;
+    height: 12px;
+  }
+  .arcade .home-stats {
+    padding: 14px 11px;
+    border-radius: 14px;
+    gap: 9px;
+    margin-top: 22px;
+  }
+  .arcade .home-stats > div {
+    column-gap: 7px;
+  }
+  .arcade .home-stats strong {
+    font-size: 22px;
+  }
+  .arcade .home-stats span {
+    font-size: 8px;
+  }
+  .arcade .home-stats svg {
+    width: 18px;
+    height: 18px;
+  }
+  .arcade .discovery-card {
+    min-height: 185px;
+    padding: 23px;
+  }
+  .arcade .discovery-card h2 {
+    font-size: 25px;
+    max-width: 220px;
+  }
+  .arcade .discovery-card .eyebrow {
+    font-size: 6px;
+  }
+  .arcade .discovery-card p:not(.eyebrow) {
+    font-size: 11px;
+  }
+  .arcade .setup-dialog {
+    padding: 27px 18px 23px !important;
+    gap: 14px;
+  }
+  .arcade .setup-dialog .dialog-heading {
+    font-size: clamp(25px, 7vw, 31px);
+    padding-right: 29px;
+    line-height: 1.05;
+  }
+  .arcade .dialog-x {
+    top: 13px;
+    right: 13px;
+    min-width: 31px;
+    min-height: 31px;
+    border-radius: 9px;
+  }
+  .arcade .setup-dialog [data-slot="dialog-description"] {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .arcade .setup-step {
+    font-size: 11px;
+    gap: 7px;
+    margin: 3px 0 0;
+  }
+  .arcade .setup-step > span {
+    width: 23px;
+    height: 23px;
+    font-size: 15px;
+  }
+  .arcade .region-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .arcade .region-options label {
+    min-height: 91px;
+    padding: 11px 4px;
+    gap: 6px;
+    font-size: 10px;
+    border-radius: 12px;
+  }
+  .arcade .region-options .continent-shape {
+    width: 49px;
+    height: 35px;
+  }
+  .arcade .region-options label > svg:not(.continent-shape) {
+    width: 32px;
+    height: 32px;
+  }
+  .arcade .region-options small {
+    font-size: 7px;
+    margin-top: 3px;
+  }
+  .arcade .region-options .selected:after {
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+    right: -4px;
+    top: -6px;
+  }
+  .arcade .difficulty-options {
+    gap: 9px;
+  }
+  .arcade .difficulty-options label {
+    font-size: 11px;
+    padding: 12px 10px 12px 32px;
+    border-radius: 19px;
+  }
+  .arcade .difficulty-options label:before {
+    left: 10px;
+    top: 13px;
+    width: 14px;
+    height: 14px;
+  }
+  .arcade .difficulty-options small {
+    font-size: 7px;
+  }
+  .arcade .setup-summary {
+    font-size: 12px;
+    padding: 11px 7px;
+    margin: 2px 0;
+    gap: 9px;
+  }
+  .arcade .setup-summary svg {
+    width: 20px;
+    height: 20px;
+  }
+  .arcade .setup-dialog .primary {
+    font-size: 22px;
+    min-height: 49px;
+  }
+  .arcade .setup-dialog .warning {
+    font-size: 9px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .arcade .screen-game {
+    padding-top: 24px;
+  }
+  .arcade .game-top {
+    flex-wrap: wrap;
+    position: relative;
+    gap: 10px;
+    padding-bottom: 17px;
+    margin-bottom: 16px;
+  }
+  .arcade .game-top > .text-button {
+    font-size: 9px;
+    flex-basis: calc(100% - 125px);
+    order: 0;
+    min-height: 27px;
+  }
+  .arcade .game-top > .lives {
+    order: 1;
+    min-height: 34px;
+    margin-left: auto;
+  }
+  .arcade .game-top > span {
+    order: 2;
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+  .arcade .lives {
+    gap: 4px;
+    padding: 6px 10px;
+  }
+  .arcade .lives svg {
+    width: 19px;
+    height: 19px;
+  }
+  .arcade .progress-caption {
+    font-size: 9px;
+  }
+  .arcade [data-slot="progress"] {
+    height: 7px;
+  }
+  .arcade .game-card {
+    margin-top: 25px;
+    padding: 0 0 17px;
+  }
+  .arcade .question-title {
+    font-size: clamp(28px, 8vw, 34px);
+    line-height: 1.04;
+    letter-spacing: -1px;
+    margin-bottom: 23px;
+  }
+  .arcade .flag-stage {
+    height: 150px;
+    margin: 23px 0 28px;
+  }
+  .arcade .flag-stage .country-flag {
+    width: 217px;
+    max-height: 145px;
+    border-radius: 13px;
+  }
+  .arcade .compact-flag {
+    height: 73px;
+    margin: 14px 0 23px;
+  }
+  .arcade .compact-flag .country-flag {
+    width: 104px;
+    max-height: 70px;
+    border-radius: 7px;
+  }
+  .arcade .answers {
+    gap: 11px;
+    margin-bottom: 26px;
+  }
+  .arcade .answer {
+    min-height: 58px;
+    border-radius: 12px;
+    padding: 10px 9px;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .arcade .answer.chosen {
+    padding: 10px 9px;
+  }
+  .arcade .option-letter {
+    width: 27px;
+    height: 29px;
+    border-radius: 7px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .arcade .option-letter svg {
+    width: 17px;
+    height: 17px;
+  }
+  .arcade .confirm-row {
+    margin-top: 22px;
+    gap: 17px;
+  }
+  .arcade .confirm-row .primary {
+    min-height: 52px;
+    width: 100%;
+    font-size: 23px;
+  }
+  .arcade .confirm-row > span {
+    font-size: 9px;
+  }
+  .arcade .feedback {
+    padding: 19px 16px;
+    border-radius: 15px;
+  }
+  .arcade .feedback > strong {
+    font-size: 21px;
+    padding-left: 30px;
+  }
+  .arcade .feedback > p {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .arcade .feedback .primary {
+    font-size: 18px;
+    min-height: 43px;
+  }
+  .arcade .stages {
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 21px;
+  }
+  .arcade .stages span {
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+  .arcade .capital-note {
+    font-size: 10px;
+  }
+  .arcade .result {
+    margin-top: 26px;
+  }
+  .arcade .result-hero {
+    flex-direction: column;
+    padding: 0 23px 27px;
+    gap: 13px;
+    border-radius: 20px;
+    min-height: 0;
+  }
+  .arcade .result.victory .result-hero:before {
+    width: 100%;
+    height: 215px;
+    bottom: auto;
+    border-right: 0;
+    border-bottom: 2px solid var(--arcade-ink);
+  }
+  .arcade .continent-medal {
+    width: 190px;
+    margin: -7px 0 0;
+  }
+  .arcade .medal-spark {
+    font-size: 27px;
+  }
+  .arcade .spark-one {
+    left: -20px;
+    top: 90px;
+  }
+  .arcade .spark-two {
+    right: -19px;
+    top: 54px;
+  }
+  .arcade .result-hero-text {
+    width: 100%;
+    text-align: center;
+    padding-top: 0;
+  }
+  .arcade .result-hero-text .eyebrow {
+    display: none;
+  }
+  .arcade .result-hero-text h2 {
+    font-size: 36px;
+    line-height: 1.03;
+    letter-spacing: -1.1px;
+    margin-bottom: 18px;
+  }
+  .arcade .result-large-count {
+    font-size: 52px;
+    padding: 14px 17px;
+    border-radius: 20px;
+    margin-top: 14px;
+  }
+  .arcade .result-large-count small {
+    font-size: 42px;
+  }
+  .arcade .result-large-count span {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  .arcade .result-hero-text > .text-button {
+    font-size: 10px;
+    margin-top: 12px;
+  }
+  .arcade .result .actions {
+    gap: 12px;
+    margin: 23px 0 30px;
+  }
+  .arcade .result .actions button {
+    font-size: 14px;
+    min-height: 47px;
+    padding: 11px 13px;
+  }
+  .arcade .result .actions .primary {
+    font-size: 17px;
+  }
+  .arcade .result:not(.victory) .result-hero {
+    padding-top: 20px;
+  }
+  .arcade .result > p:not(.eyebrow) {
+    font-size: 11px;
+  }
+  .arcade .passport-heading h1 {
+    font-size: 31px;
+    line-height: 1.1;
+    margin-bottom: 23px;
+  }
+  .arcade .passport-heading h1 span {
+    display: block;
+  }
+  .arcade .arcade-ticket {
+    gap: 12px;
+    padding: 21px 19px;
+    border-radius: 17px;
+  }
+  .arcade .ticket-avatar {
+    width: 55px;
+    height: 55px;
+    font-size: 37px;
+  }
+  .arcade .ticket-details h2 {
+    font-size: 26px;
+    margin: 0 0 8px;
+    letter-spacing: -0.7px;
+  }
+  .arcade .ticket-details h2 > span {
+    font-size: 10px;
+    line-height: 1.2;
+    display: block;
+    margin-top: 2px;
+  }
+  .arcade .ticket-details p {
+    font-size: 9px;
+    line-height: 1.7;
+  }
+  .arcade .ticket-details p i {
+    margin: 0 3px;
+  }
+  .arcade .ticket-badges {
+    display: none;
+  }
+  .arcade .passport-collection {
+    padding-top: 25px;
+    margin-top: 3px;
+  }
+  .arcade .collection-title {
+    margin-bottom: 19px;
+    gap: 12px;
+    align-items: center;
+  }
+  .arcade .collection-title h2 {
+    font-size: 21px;
+    letter-spacing: -0.6px;
+  }
+  .arcade .collection-title p {
+    display: none;
+  }
+  .arcade .collection-count strong {
+    font-size: 23px;
+  }
+  .arcade .collection-count strong small {
+    font-size: 12px;
+  }
+  .arcade .collection-count > span {
+    font-size: 7px;
+  }
+  .arcade .stamp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto;
+    gap: 14px 10px;
+    padding: 4px 2px;
+  }
+  .arcade .travel-stamp {
+    min-height: 144px;
+    padding: 13px 3px 11px;
+    border-width: 5px;
+    gap: 2px;
+    border-radius: 6px;
+  }
+  .arcade .travel-stamp > strong {
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+  .arcade .travel-stamp .continent-shape {
+    width: 57px;
+    height: 46px;
+    margin: 5px auto;
+  }
+  .arcade .stamp-caption {
+    font-size: 4px;
+    letter-spacing: 0.1px;
+  }
+  .arcade .travel-stamp > span.stamp-status {
+    font-size: 6px;
+    gap: 2px;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+  .arcade .travel-stamp .stamp-status svg {
+    width: 10px;
+    height: 10px;
+  }
+  .arcade .travel-stamp > span.stamp-total {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .arcade .stamp-featured {
+    grid-column: 1/-1;
+    grid-row: auto;
+    min-height: 230px;
+    width: 85%;
+    justify-self: center;
+    transform: rotate(-3deg);
+    padding: 20px 19px;
+    margin: 6px 0 14px;
+    border-width: 7px;
+  }
+  .arcade .stamp-featured > strong {
+    font-size: 40px;
+  }
+  .arcade .stamp-featured .continent-shape {
+    width: 149px;
+    height: 111px;
+    margin: 10px auto 7px;
+  }
+  .arcade .stamp-featured .stamp-caption {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+  .arcade .stamp-featured > span.stamp-status {
+    font-size: 12px;
+    gap: 7px;
+  }
+  .arcade .stamp-featured .stamp-status svg {
+    width: 15px;
+    height: 15px;
+  }
+  .arcade .stamp-featured > span.stamp-total {
+    font-size: 24px;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child {
+    grid-column: 1/-1;
+    min-height: 79px;
+    display: grid;
+    grid-template-columns: 61px 1fr auto;
+    gap: 4px 12px;
+    align-content: center;
+    padding: 10px 17px;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > .continent-shape {
+    grid-column: 1;
+    grid-row: 1/4;
+    width: 61px;
+    height: 46px;
+    margin: 0;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > strong {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 24px;
+    text-align: left;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > .stamp-caption {
+    display: none;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > .stamp-status {
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > .stamp-total {
+    grid-column: 2;
+    grid-row: 3;
+    justify-content: flex-start;
+    font-size: 11px;
+  }
+  .arcade .stamp-grid .travel-stamp:last-child > .stamp-lock {
+    position: static;
+    grid-column: 3;
+    grid-row: 1/4;
+    width: 24px;
+    height: 24px;
+    align-self: center;
+  }
+  .arcade .stamp-lock {
+    width: 17px;
+    height: 17px;
+    top: 8px;
+    right: 4px;
+  }
+  .arcade .passport-play {
+    width: 100%;
+    font-size: 18px;
+    margin-top: 25px;
+  }
+  .arcade .passport-footnote {
+    margin-top: 25px;
+  }
+  .arcade .passport-footnote p {
+    font-size: 10px;
+  }
+  .arcade .profile-stats article {
+    padding: 17px 10px;
+    border-radius: 13px;
+  }
+  .arcade .profile-stats strong {
+    font-size: 31px;
+  }
+  .arcade .profile-stats span {
+    font-size: 10px;
+  }
+  .arcade .panel {
+    border-radius: 15px;
+  }
+  .arcade .panel h2 {
+    font-size: 25px;
+  }
+  .arcade .week-activity h3,
+  .arcade .achievement-shelf h3 {
+    font-size: 11px;
+  }
+  .arcade .screen-study > h1 {
+    font-size: 38px;
+    margin-bottom: 13px;
+  }
+  .arcade .screen-study > .subheading {
+    font-size: 11px;
+  }
+  .arcade .search input {
+    height: 44px;
+    font-size: 11px;
+  }
+  .arcade .continent-filter {
+    gap: 7px !important;
+  }
+  .arcade .continent-filter label {
+    font-size: 10px;
+    padding: 7px 13px;
+  }
+  .arcade .catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 10px;
+    margin-top: 21px;
+  }
+  .arcade .catalog .country-card {
+    grid-template-columns: 39px minmax(0, 1fr);
+    min-height: 91px;
+    gap: 2px 8px;
+    padding: 13px 8px;
+    border-radius: 12px;
+  }
+  .arcade .country-card .country-flag {
+    width: 39px;
+    height: 29px;
+    border-radius: 3px;
+  }
+  .arcade .catalog .country-card h3 {
+    font-size: 11px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+  .arcade .catalog .country-card p {
+    font-size: 9px;
+    margin: 2px 0;
+    overflow-wrap: anywhere;
+  }
+  .arcade .catalog .country-card > span {
+    font-size: 7px;
+  }
+  .arcade .country-card > span > svg {
+    width: 10px;
+    height: 10px;
+  }
+  .arcade .site-footer {
+    margin-top: 33px;
+  }
+  .arcade .site-footer .footer-brand {
+    font-size: 9px;
+  }
+}
+@media (max-width: 360px) {
+  .arcade main {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+  .arcade .hero-copy h1 {
+    font-size: 28px;
+  }
+  .arcade .globe-stage {
+    height: 316px;
+  }
+  .arcade .globe-scene {
+    height: 266px;
+  }
+  .arcade .globe-surface {
+    width: 247px;
+    top: 12px;
+  }
+  .arcade .drag-hint {
+    font-size: 11px;
+  }
+  .arcade .mode-description h2 {
+    font-size: 24px;
+  }
+  .arcade .mode-description p {
+    font-size: 10px;
+  }
+  .arcade .selected-mode {
+    gap: 9px;
+    padding: 11px;
+  }
+  .arcade .selected-mode-icon {
+    padding-right: 9px;
+  }
+  .arcade .selected-mode-icon svg {
+    width: 25px;
+    height: 25px;
+  }
+  .arcade .catalog .country-card {
+    grid-template-columns: 1fr;
+    min-height: 134px;
+    text-align: center;
+    padding: 15px 10px;
+  }
+  .arcade .country-card .country-flag {
+    grid-column: 1;
+    grid-row: 1;
+    width: 53px;
+    height: 37px;
+    margin: 0 auto 6px;
+    object-fit: contain;
+  }
+  .arcade .catalog .country-card h3,
+  .arcade .catalog .country-card p,
+  .arcade .catalog .country-card > span {
+    grid-column: 1;
+  }
+  .arcade .catalog .country-card h3 {
+    grid-row: 2;
+  }
+  .arcade .catalog .country-card p {
+    grid-row: 3;
+  }
+  .arcade .catalog .country-card > span {
+    grid-row: 4;
+  }
+  .arcade .stamp-featured > strong {
+    font-size: 35px;
+  }
+  .arcade .travel-stamp > strong {
+    font-size: 14px;
+  }
+  .arcade .travel-stamp > span.stamp-status {
+    font-size: 5px;
+  }
+  .arcade .ticket-details h2 {
+    font-size: 24px;
+  }
+  .arcade .ticket-details p {
+    font-size: 8px;
+  }
+  .arcade .ticket-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 33px;
+  }
+  .arcade .answer {
+    font-size: 11px;
+    gap: 6px;
+    padding: 10px 7px;
+  }
+  .arcade .answer.chosen {
+    padding: 10px 7px;
+  }
+  .arcade .option-letter {
+    width: 24px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade .continent-medal {
+    animation: none;
+    transform: none;
+  }
+  .arcade .primary,
+  .arcade .secondary,
+  .arcade .travel-stamp,
+  .arcade .country-card {
+    transition: none;
+  }
+}
+/* The reference's compact score and lives keep the play field uncluttered. */
+.arcade .game-top {
+  justify-content: flex-start;
+  gap: 17px;
+  border-bottom: 0;
+  margin-bottom: 26px;
+}
+.arcade .game-top > .arcade-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-basis: auto;
+  color: var(--arcade-ink);
+  background: #fffaf2;
+  border: 1.5px solid var(--arcade-ink);
+  border-radius: 24px;
+  padding: 8px 17px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 2px 0 #102a4120;
+  white-space: nowrap;
+}
+.arcade .arcade-score svg {
+  color: var(--orange);
+  fill: var(--orange);
+}
+.arcade .game-top > .lives {
+  margin-left: auto;
+}
+.arcade .game-top > .game-mode-label {
+  font-size: 11px;
+  color: #677f83;
+  margin-left: 0;
+}
+.arcade .game-top > .game-exit {
+  order: 3;
+  border: 1.5px solid #c0c7c4;
+  border-radius: 20px;
+  padding: 8px 12px;
+  background: #fffaf2;
+}
+.arcade .screen-game > .progress-caption {
+  display: none;
+}
+.arcade .screen-game > [data-slot="progress"] {
+  height: 5px;
+  border: 0;
+  margin-bottom: 24px;
+}
+.arcade .setup-summary {
+  justify-content: space-evenly;
+  gap: 18px;
+  padding: 12px 18px;
+}
+.arcade .setup-lives {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.arcade .setup-lives > div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.arcade .setup-lives svg {
+  color: #ef6548;
+  stroke: #8a3129;
+  stroke-width: 1.6;
+}
+.arcade .setup-lives small {
+  color: var(--arcade-ink);
+  font-size: 10px;
+}
+.arcade .setup-country-count {
+  flex: 1;
+  border-left: 1.5px solid #849caa;
+  text-align: center;
+  color: var(--orange);
+  font:
+    italic 900 29px/1.1 "Giratlas Arcade",
+    Manrope,
+    sans-serif;
+}
+.arcade .setup-country-count > small {
+  color: var(--arcade-ink);
+  font:
+    800 12px/1.2 Manrope,
+    sans-serif;
+}
+.arcade .setup-country-count > .expedition-stages {
+  display: block;
+  margin-top: 5px;
+  font-size: 8px;
+}
+@media (max-width: 580px) {
+  .arcade .game-top {
+    gap: 12px;
+    margin-bottom: 23px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .arcade .game-top > .arcade-score {
+    order: 0;
+    flex-basis: auto;
+    min-height: 37px;
+    font-size: 19px;
+    padding: 7px 15px;
+  }
+  .arcade .game-top > .lives {
+    order: 1;
+    margin-left: auto;
+  }
+  .arcade .game-top > .game-mode-label {
+    order: 2;
+    flex-basis: calc(100% - 50px);
+    font-size: 10px;
+    margin: 0;
+  }
+  .arcade .game-top > .game-exit {
+    order: 3;
+    flex-basis: auto;
+    width: 32px;
+    min-height: 28px;
+    padding: 4px 6px;
+    justify-content: center;
+    border-color: #b5c1c4;
+    margin-left: auto;
+  }
+  .arcade .game-exit > span {
+    display: none;
+  }
+  .arcade .game-card {
+    margin-top: 24px;
+  }
+  .arcade .setup-summary {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+  .arcade .setup-lives svg {
+    width: 19px;
+    height: 19px;
+  }
+  .arcade .setup-lives > div {
+    gap: 3px;
+  }
+  .arcade .setup-lives small {
+    font-size: 9px;
+  }
+  .arcade .setup-country-count {
+    font-size: 27px;
+  }
+  .arcade .setup-country-count > small {
+    font-size: 11px;
+  }
+}
+@media (max-width: 580px) and (max-height: 740px) {
+  .arcade .screen-home {
+    padding-top: 18px;
+  }
+  .arcade .hero-copy {
+    margin-bottom: 16px;
+  }
+  .arcade .hero-copy h1 {
+    font-size: 29px;
+  }
+  .arcade .globe-stage {
+    height: 292px;
+  }
+  .arcade .globe-scene {
+    height: 240px;
+  }
+  .arcade .globe-surface {
+    width: 233px;
+    top: 7px;
+  }
+  .arcade .mode-selector-controls {
+    margin-top: 16px;
+  }
+  .arcade .selected-mode {
+    min-height: 73px;
+  }
+  .arcade .mobile-mode-play {
+    margin-top: 12px;
+    min-height: 47px;
+  }
+}

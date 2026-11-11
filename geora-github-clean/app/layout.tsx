@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./arcade.css";
 
 export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
@@ -19,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="antialiased">
+      <body className="antialiased arcade">
         <a className="skip-link" href="#main-content">
           Ir al contenido
         </a>
